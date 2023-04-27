@@ -2,6 +2,8 @@ import 'package:data_shelf/auth/screens/login/components/background.dart';
 import 'package:data_shelf/auth/screens/login/components/rounded_password_field.dart';
 import 'package:data_shelf/auth/screens/login/components/rounded_text_field.dart';
 import 'package:data_shelf/auth/screens/login/components/text_field_container.dart';
+import 'package:data_shelf/auth/screens/signup/components/or_divider.dart';
+import 'package:data_shelf/auth/screens/signup/components/signup_with_google_button.dart';
 import 'package:data_shelf/auth/screens/signup/signup_screen.dart';
 import 'package:data_shelf/auth/screens/welcome/components/rounded_button.dart';
 import 'package:data_shelf/constants.dart';
@@ -23,7 +25,7 @@ class Body extends StatelessWidget {
             child: Image.asset(
           "assets/images/logo.png",
           // width: 400,
-          // height: 300,
+          height: 200,
         )),
         SizedBox(height: size.height * 0.05),
         Text("Login", style: TextStyle(fontWeight: FontWeight.bold)),
@@ -47,6 +49,11 @@ class Body extends StatelessWidget {
               ),
             );
           },
+        ),
+        OrDivider(),
+        SignupWithGoogleButton(
+          press: () {},
+          signup: false,
         )
       ],
     ));

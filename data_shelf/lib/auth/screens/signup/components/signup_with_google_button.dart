@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 class SignupWithGoogleButton extends StatelessWidget {
   final VoidCallback press;
-  const SignupWithGoogleButton({super.key, required this.press});
+  final bool signup;
+  const SignupWithGoogleButton(
+      {super.key, required this.press, this.signup = true});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,8 @@ class SignupWithGoogleButton extends StatelessWidget {
           height: 24,
           width: 24,
         ),
-        label: Text('Sign up with Google'),
+        label:
+            signup ? Text('Sign up with Google') : Text('Sign in with Google'),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
           foregroundColor: primaryColor,

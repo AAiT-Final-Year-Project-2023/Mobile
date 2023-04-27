@@ -1,4 +1,5 @@
 import 'package:data_shelf/auth/screens/login/login_screen.dart';
+import 'package:data_shelf/auth/screens/signup/components/confirm_email_screen.dart';
 import 'package:data_shelf/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:data_shelf/auth/screens/welcome/welcome_screen.dart';
@@ -20,8 +21,9 @@ class MyApp extends StatelessWidget {
         primaryColor: primaryColor,
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: WelcomeScreen(),
+      // home: WelcomeScreen(),
       // home: LoginScreen(),
+      home: ConfirmEmailScreen(),
     );
   }
 }

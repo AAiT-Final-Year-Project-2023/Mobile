@@ -1,5 +1,6 @@
 import 'package:data_shelf/auth/screens/login/login_screen.dart';
 import 'package:data_shelf/auth/screens/signup/components/background.dart';
+import 'package:data_shelf/auth/screens/signup/components/confirm_email_screen.dart';
 import 'package:data_shelf/auth/screens/signup/components/or_divider.dart';
 import 'package:data_shelf/auth/screens/signup/components/signup_with_google_button.dart';
 import 'package:data_shelf/constants.dart';
@@ -24,7 +25,7 @@ class Body extends StatelessWidget {
             child: Image.asset(
           "assets/images/logo.png",
           // width: 400,
-          // height: 300,
+          height: 200,
         )),
         SizedBox(height: size.height * 0.05),
         Text("Register", style: TextStyle(fontWeight: FontWeight.bold)),
@@ -36,7 +37,23 @@ class Body extends StatelessWidget {
         RoundedPasswordField(
           onChanged: (value) {},
         ),
-        RoundedButton(text: "Register", press: () {}),
+        RoundedPasswordField(
+          hintText: "Re-enter Password",
+          onChanged: (value) {},
+        ),
+        RoundedButton(
+          text: "Register",
+          press: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return ConfirmEmailScreen();
+                },
+              ),
+            );
+          },
+        ),
         SizedBox(height: size.height * 0.015),
         HaveAccountCheck(
           login: false,
