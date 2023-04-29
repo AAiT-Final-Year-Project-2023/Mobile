@@ -1,6 +1,6 @@
 import 'package:data_shelf/auth/screens/login/login_screen.dart';
 import 'package:data_shelf/auth/screens/signup/components/background.dart';
-import 'package:data_shelf/auth/screens/signup/components/confirm_email_screen.dart';
+import 'package:data_shelf/auth/screens/signup/confirm_email_screen.dart';
 import 'package:data_shelf/auth/screens/signup/components/or_divider.dart';
 import 'package:data_shelf/auth/screens/signup/components/signup_with_google_button.dart';
 import 'package:data_shelf/constants.dart';
