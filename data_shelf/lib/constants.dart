@@ -9,3 +9,6 @@ Color alertBtnColor = Color.fromARGB(255, 74, 158, 226);
 
 const TextStyle titleStyle =
     TextStyle(fontSize: 30, fontWeight: FontWeight.w600);
+
+const TextStyle titleStyleMidium =
+    TextStyle(fontSize: 20, fontWeight: FontWeight.w600);

@@ -2,6 +2,7 @@ import 'package:data_shelf/constants.dart';
 import 'package:data_shelf/contribution/screen/contribution_screen.dart';
 import 'package:data_shelf/dataset/screen/dataset_screen.dart';
 import 'package:data_shelf/home/screens/components/app_bar_with_search.dart';
+import 'package:data_shelf/home/screens/components/body.dart';
 import 'package:data_shelf/request/screen/request_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,10 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Home',
-      style: titleStyle,
-    ),
+    Body(),
     DatasetScreen(),
     RequestScreen(),
     ContributionScreen(),
