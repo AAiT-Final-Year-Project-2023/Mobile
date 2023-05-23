@@ -94,7 +94,7 @@ class EmailInputField extends StatelessWidget {
           SizedBox(
             height: size.height * 0.05,
           ),
-          Center(child: RoundedButton(text: btnText, press: press)),
+          Center(child: RoundedButton(size: size, text: btnText, press: press)),
         ]);
   }
 }

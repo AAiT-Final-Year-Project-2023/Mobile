@@ -148,6 +148,7 @@ class ConfirmEmailScreen extends StatelessWidget {
               Center(
                   child: RoundedButton(
                 text: "Resend",
+                size: size,
                 press: () {
                   Navigator.push(
                     context,

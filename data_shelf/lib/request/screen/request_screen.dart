@@ -1,4 +1,5 @@
 import 'package:data_shelf/constants.dart';
+import 'package:data_shelf/request/screen/components/body.dart';
 import 'package:flutter/material.dart';
 
 class RequestScreen extends StatelessWidget {
@@ -6,11 +7,6 @@ class RequestScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Text(
-        'Request',
-        style: titleStyle,
-      ),
-    );
+    return Scaffold(body: Body());
   }
 }

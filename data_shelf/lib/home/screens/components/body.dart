@@ -78,7 +78,7 @@ List<DatasetCustom> datasetsForDisplay = [
   )
 ];
 
-List<RequestListItem> items = [
+List<RequestListItem> requestItems = [
   RequestListItem(
     text:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada aliquet odio ut malesuada. Aliquam sed gravida libero. Sed tempus velit nec est ultrices, ut tempor arcu convallis.',
@@ -199,9 +199,9 @@ class Body extends StatelessWidget {
   Container listViewRequest() {
     return Container(
       child: ListView.builder(
-          itemCount: items.length,
+          itemCount: requestItems.length,
           itemBuilder: (context, index) {
-            final item = items[index];
+            final item = requestItems[index];
             final shortenedText = item.text.length > 50
                 ? item.text.substring(0, 50) + '...'
                 : item.text;

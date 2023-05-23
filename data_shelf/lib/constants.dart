@@ -12,3 +12,6 @@ const TextStyle titleStyle =
 
 const TextStyle titleStyleMidium =
     TextStyle(fontSize: 20, fontWeight: FontWeight.w600);
+
+const TextStyle titleStyleSmall =
+    TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey);

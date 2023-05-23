@@ -1,4 +1,5 @@
 import 'package:data_shelf/constants.dart';
+import 'package:data_shelf/contribution/screen/components/body.dart';
 import 'package:flutter/material.dart';
 
 class ContributionScreen extends StatelessWidget {
@@ -6,11 +7,6 @@ class ContributionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Text(
-        'Contribution',
-        style: titleStyle,
-      ),
-    );
+    return Scaffold(body: Body());
   }
 }

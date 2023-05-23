@@ -42,6 +42,7 @@ class Body extends StatelessWidget {
           onChanged: (value) {},
         ),
         RoundedButton(
+          size: size,
           text: "Register",
           press: () {
             Navigator.push(

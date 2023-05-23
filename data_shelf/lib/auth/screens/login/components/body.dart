@@ -53,6 +53,7 @@ class Body extends StatelessWidget {
         }),
         SizedBox(height: size.height * 0.015),
         RoundedButton(
+          size: size,
           text: "Login",
           press: () {
             Navigator.push(

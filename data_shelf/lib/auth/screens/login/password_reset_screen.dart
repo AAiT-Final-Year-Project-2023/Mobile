@@ -103,6 +103,7 @@ class PasswordResetScreen extends StatelessWidget {
                   height: size.height * 0.05,
                 ),
                 RoundedButton(
+                  size: size,
                   text: "Reset Password",
                   press: () {
                     Navigator.push(
