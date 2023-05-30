@@ -1,6 +1,7 @@
 import 'package:data_shelf/auth/screens/welcome/components/rounded_button.dart';
 import 'package:data_shelf/dataset/screen/components/page_title_text.dart';
 import 'package:data_shelf/home/screens/components/request_list_item.dart';
+import 'package:data_shelf/request/screen/request_page.dart';
 import 'package:flutter/material.dart';
 
 List<RequestListItem> requestItems = [
@@ -104,7 +105,18 @@ class Body extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 RoundedButton(
-                    size: size, widthRatio: 0.30, text: "Create", press: () {}),
+                  size: size,
+                  widthRatio: 0.30,
+                  text: "Create",
+                  press: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RequestPage(),
+                      ),
+                    );
+                  },
+                ),
                 RoundedButton(
                     size: size,
                     widthRatio: 0.5,

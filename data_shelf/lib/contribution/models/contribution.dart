@@ -14,4 +14,8 @@ class Contribution {
     required this.contributionType,
     required this.detail,
   });
+
+  // todo
+  // to json and from json functions
+  // https://quicktype.io/
 }

@@ -1,19 +1,6 @@
 import 'package:data_shelf/constants.dart';
+import 'package:data_shelf/contribution/models/image_contribution.dart';
 import 'package:flutter/material.dart';
-
-class ImageContribution {
-  final String fileName;
-  final String fileSize;
-  final String date;
-  final String status;
-
-  ImageContribution({
-    required this.fileName,
-    required this.fileSize,
-    required this.date,
-    required this.status,
-  });
-}
 
 class ImageContributionListView extends StatelessWidget {
   final List<ImageContribution> contributions = [
