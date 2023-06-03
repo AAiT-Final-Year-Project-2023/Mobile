@@ -19,8 +19,9 @@ class ForgotPasswordScreen extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return ConfirmEmailScreen(
-                    reset: true,
+                  return ConfirmationEmailScreen(
+                    email: "",
+                    // reset: true,
                   );
                   // return confirm_OTP_Screen();
                 },

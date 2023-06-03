@@ -4,19 +4,27 @@ import 'package:data_shelf/auth/screens/login/components/text_field_container.da
 import 'package:data_shelf/auth/screens/login/login_screen.dart';
 import 'package:data_shelf/auth/screens/signup/confirm_email_screen.dart';
 import 'package:data_shelf/auth/screens/welcome/components/rounded_button.dart';
-import 'package:data_shelf/constants.dart';
+import 'package:data_shelf/utils/constants.dart';
 import 'package:flutter/material.dart';
 
-class EmailInputField extends StatelessWidget {
+class EmailInputField extends StatefulWidget {
   final String description;
   final String btnText;
   final VoidCallback press;
+
   const EmailInputField({
     super.key,
     required this.description,
     required this.btnText,
     required this.press,
   });
+
+  @override
+  State<EmailInputField> createState() => _EmailInputFieldState();
+}
+
+class _EmailInputFieldState extends State<EmailInputField> {
+  var emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +84,7 @@ class EmailInputField extends StatelessWidget {
           ),
           Center(
             child: Text(
-              description,
+              widget.description,
               style: TextStyle(
                   fontWeight: FontWeight.bold, color: Colors.grey[400]),
               textAlign: TextAlign.center,
@@ -87,6 +95,7 @@ class EmailInputField extends StatelessWidget {
           ),
           Center(
             child: RoundedTextField(
+              controller: emailController,
               hintText: "Your Email",
               onChanged: (value) {},
             ),
@@ -94,7 +103,9 @@ class EmailInputField extends StatelessWidget {
           SizedBox(
             height: size.height * 0.05,
           ),
-          Center(child: RoundedButton(size: size, text: btnText, press: press)),
+          Center(
+              child: RoundedButton(
+                  size: size, text: widget.btnText, press: widget.press)),
         ]);
   }
 }

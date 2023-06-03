@@ -1,4 +1,4 @@
-import 'package:data_shelf/constants.dart';
+import 'package:data_shelf/utils/constants.dart';
 import 'package:data_shelf/contribution/models/contribution.dart';
 import 'package:data_shelf/contribution/screen/components/contribution_card.dart';
 import 'package:data_shelf/contribution/screen/contribution_detail_screen.dart';

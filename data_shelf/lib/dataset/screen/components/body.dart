@@ -1,4 +1,4 @@
-import 'package:data_shelf/constants.dart';
+import 'package:data_shelf/utils/constants.dart';
 import 'package:data_shelf/contribution/screen/components/body.dart';
 import 'package:data_shelf/dataset/screen/components/page_title_text.dart';
 import 'package:flutter/material.dart';

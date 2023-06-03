@@ -1,4 +1,4 @@
-import 'package:data_shelf/constants.dart';
+import 'package:data_shelf/utils/constants.dart';
 import 'package:data_shelf/contribution/models/image_contribution.dart';
 import 'package:flutter/material.dart';
 

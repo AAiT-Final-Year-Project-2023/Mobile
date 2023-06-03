@@ -8,7 +8,7 @@
 
 import 'dart:convert';
 import 'package:data_shelf/auth/models/user_signup.dart';
-import 'package:data_shelf/config.dart';
+import 'package:data_shelf/utils/config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
@@ -29,9 +29,7 @@ class AuthDataProvider {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: userSignupEmailToJson(UserSignupEmail(
-          username: "BontuFufa",
-          email: "bontu@gmail.com",
-          password: "1Bontu@DS!")),
+          username: username, email: email, password: password)),
     );
     debugPrint(response.body);
     debugPrint(response.statusCode.toString());
@@ -122,17 +120,17 @@ class AuthDataProvider {
   Future<String> matchCodeEntered(
       {required String email, required String verificationCode}) async {
     final response = await httpClient.post(
-      Uri.parse('$_baseURL/auth/verify-otp'),
+      Uri.parse('$_baseURL/auth/verify'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
-        "otpCode": verificationCode,
+        "code": verificationCode,
         "email": email,
       }),
     );
     if (response.statusCode == 201) {
-      return jsonDecode(response.body)['resetToken'];
+      return jsonDecode(response.body)['access-token'];
     } else {
       throw Exception("Error_WHILE_SENDING_OTP");
     }

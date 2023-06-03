@@ -23,22 +23,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SignupBloc extends Bloc<SignupEvent, SignupState> {
   final AuthRepository authRepository;
   SignupBloc({required this.authRepository}) : super(SignupState()) {
-    on<SignupNameChanged>(
-      (event, emit) {
-        emit(state.copyWith(username: event.username));
-      },
-    );
-    on<SignupEmailChanged>(
-      (event, emit) {
-        emit(state.copyWith(username: event.email));
-      },
-    );
-    on<SignupPasswordChanged>(
-      (event, emit) {
-        emit(state.copyWith(username: event.password));
-      },
-    );
-    on<SignupSubmitted>(
+    // on<SignupNameChanged>(
+    //   (event, emit) {
+    //     emit(state.copyWith(username: event.username));
+    //   },
+    // );
+    // on<SignupEmailChanged>(
+    //   (event, emit) {
+    //     emit(state.copyWith(username: event.email));
+    //   },
+    // );
+    // on<SignupPasswordChanged>(
+    //   (event, emit) {
+    //     emit(state.copyWith(username: event.password));
+    //   },
+    // );
+
+    on<SignupWithEmailSubmitted>(
       (event, emit) async {
         emit(state.copyWith(formState: FormSubmitting()));
         try {

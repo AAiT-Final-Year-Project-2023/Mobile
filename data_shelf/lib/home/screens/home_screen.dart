@@ -1,4 +1,4 @@
-import 'package:data_shelf/constants.dart';
+import 'package:data_shelf/utils/constants.dart';
 import 'package:data_shelf/contribution/screen/contribution_screen.dart';
 import 'package:data_shelf/dataset/screen/dataset_screen.dart';
 import 'package:data_shelf/home/screens/components/app_bar_with_search.dart';

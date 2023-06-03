@@ -40,7 +40,7 @@ dependencies:
   google_nav_bar: ^5.0.6
   image_picker: ^0.8.7+5
   http: 
-  flutter_secure_storage: ^8.0.0
+  flutter_secure_storage: ^3.3.1
   equatable: ^2.0.5
   shared_preferences: ^2.1.1
 

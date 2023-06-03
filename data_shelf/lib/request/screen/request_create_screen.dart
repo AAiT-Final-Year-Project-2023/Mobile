@@ -1,9 +1,9 @@
 import 'package:data_shelf/auth/screens/welcome/components/rounded_button.dart';
-import 'package:data_shelf/constants.dart';
+import 'package:data_shelf/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 import 'package:data_shelf/auth/screens/welcome/components/rounded_button.dart';
-import 'package:data_shelf/constants.dart';
+import 'package:data_shelf/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class LabelFormModel {
@@ -11,12 +11,12 @@ class LabelFormModel {
   TextEditingController detailController = TextEditingController();
 }
 
-class RequestPage extends StatefulWidget {
+class RequestCreateScreen extends StatefulWidget {
   @override
-  _RequestPageState createState() => _RequestPageState();
+  _RequestCreateState createState() => _RequestCreateState();
 }
 
-class _RequestPageState extends State<RequestPage> {
+class _RequestCreateState extends State<RequestCreateScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();

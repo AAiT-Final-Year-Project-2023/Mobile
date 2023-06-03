@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:data_shelf/auth/screens/welcome/components/rounded_button.dart';
-import 'package:data_shelf/constants.dart';
+import 'package:data_shelf/utils/constants.dart';
 import 'package:data_shelf/contribution/screen/components/collapsible_text.dart';
 import 'package:data_shelf/contribution/screen/components/image_contribution_listview.dart';
 import 'package:data_shelf/dataset/screen/components/page_title_text.dart';

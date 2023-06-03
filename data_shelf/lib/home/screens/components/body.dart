@@ -1,4 +1,4 @@
-import 'package:data_shelf/constants.dart';
+import 'package:data_shelf/utils/constants.dart';
 import 'package:data_shelf/home/screens/components/dataset_custom_card.dart';
 import 'package:data_shelf/home/screens/components/recent_activity_card.dart';
 import 'package:data_shelf/home/screens/components/request_list_item.dart';

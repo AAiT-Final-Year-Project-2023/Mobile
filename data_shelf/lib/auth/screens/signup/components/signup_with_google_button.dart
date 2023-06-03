@@ -1,4 +1,4 @@
-import 'package:data_shelf/constants.dart';
+import 'package:data_shelf/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class SignupWithGoogleButton extends StatelessWidget {

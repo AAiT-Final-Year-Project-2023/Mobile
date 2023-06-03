@@ -3,7 +3,7 @@ import 'package:data_shelf/auth/screens/login/forgot_password_screen.dart';
 import 'package:data_shelf/auth/screens/login/login_screen.dart';
 import 'package:data_shelf/auth/screens/signup/components/background.dart';
 import 'package:data_shelf/auth/screens/welcome/components/rounded_button.dart';
-import 'package:data_shelf/constants.dart';
+import 'package:data_shelf/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class PasswordResetScreen extends StatelessWidget {

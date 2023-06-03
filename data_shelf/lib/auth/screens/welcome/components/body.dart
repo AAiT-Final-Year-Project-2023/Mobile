@@ -1,7 +1,8 @@
 import 'package:data_shelf/auth/screens/signup/signup_screen.dart';
 import 'package:data_shelf/auth/screens/welcome/components/background.dart';
 import 'package:data_shelf/auth/screens/welcome/components/rounded_button.dart';
-import 'package:data_shelf/constants.dart';
+import 'package:data_shelf/routes.dart';
+import 'package:data_shelf/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -34,14 +35,15 @@ class Body extends StatelessWidget {
             size: size,
             text: "Login",
             press: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return LoginScreen();
-                  },
-                ),
-              );
+              Navigator.of(context).pushNamed(RouteGenerator.signinPage);
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) {
+              //       return LoginScreen();
+              //     },
+              //   ),
+              // );
             },
           ),
           RoundedButton(
@@ -49,14 +51,15 @@ class Body extends StatelessWidget {
             text: "Register",
             color: primaryColorLight,
             press: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return SignUpScreen();
-                  },
-                ),
-              );
+              Navigator.of(context).pushNamed(RouteGenerator.signupPage);
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) {
+              //       return SignUpScreen();
+              //     },
+              //   ),
+              // );
             },
           ),
         ],

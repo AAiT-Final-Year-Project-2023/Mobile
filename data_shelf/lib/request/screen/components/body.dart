@@ -1,7 +1,7 @@
 import 'package:data_shelf/auth/screens/welcome/components/rounded_button.dart';
 import 'package:data_shelf/dataset/screen/components/page_title_text.dart';
 import 'package:data_shelf/home/screens/components/request_list_item.dart';
-import 'package:data_shelf/request/screen/request_page.dart';
+import 'package:data_shelf/request/screen/request_create_screen.dart';
 import 'package:flutter/material.dart';
 
 List<RequestListItem> requestItems = [
@@ -112,7 +112,7 @@ class Body extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => RequestPage(),
+                        builder: (context) => RequestCreateScreen(),
                       ),
                     );
                   },
