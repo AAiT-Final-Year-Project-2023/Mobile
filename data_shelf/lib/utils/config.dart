@@ -1,3 +1,4 @@
 // define url
 
-final BASE_URL = "http://localhost:3000/api";
+const BASE_URL = "http://10.0.2.2:3000/api";
+// final BASE_URL = "http://localhost:3000/api";

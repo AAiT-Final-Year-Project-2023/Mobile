@@ -15,9 +15,10 @@
 
 import 'package:data_shelf/auth/bloc/signup/signup_event.dart';
 import 'package:data_shelf/auth/bloc/signup/signup_state.dart';
-import 'package:data_shelf/auth/bloc/signup/verify_OTP_event.dart';
-import 'package:data_shelf/auth/bloc/signup/verify_OTP_state.dart';
+import 'package:data_shelf/auth/bloc/verifyEmail/verify_OTP_event.dart';
+import 'package:data_shelf/auth/bloc/verifyEmail/verify_OTP_state.dart';
 import 'package:data_shelf/auth/repository/auth_repository.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // Define the BLoC
@@ -46,21 +47,45 @@ class OTPVerificationBloc
         await authRepository.matchCodeEntered(
           email: event.email,
           verificationCode: event.code,
+          userName: event.username,
         );
         // Replace this with your actual API call
         // await Future.delayed(Duration(seconds: 2));
 
         // Simulate a successful verification
-        final isOTPValid = event.code == '123456';
-
-        if (isOTPValid) {
-          yield OTPVerifiedState();
-        } else {
-          yield OTPErrorState('Invalid OTP');
-        }
+        // put to shared prefernces
+        yield OTPVerifiedState();
       } catch (e) {
         yield OTPErrorState('An error occurred');
       }
     }
+  }
+}
+
+class OTPVerificationBloc2
+    extends Bloc<OTPVerificationEvent, OTPVerificationState> {
+  final AuthRepository authRepository;
+  OTPVerificationBloc2({required this.authRepository})
+      : super(OTPVerificationInitial()) {
+    on<OTPEnteredEvent>(
+      (event, emit) async {
+        emit(OTPVerifyingState());
+        try {
+          debugPrint('[BLOC] Code sent from UI form');
+
+          debugPrint('email : ${event.email} \n code: ${event.code}');
+          await authRepository.matchCodeEntered(
+            email: event.email,
+            verificationCode: event.code,
+            userName: event.username,
+          );
+          debugPrint('[BLOC] Code sent Verified');
+          emit(OTPVerifiedState());
+        } catch (e) {
+          debugPrint(e.toString());
+          emit(OTPErrorState(e.toString()));
+        }
+      },
+    );
   }
 }

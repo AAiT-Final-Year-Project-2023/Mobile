@@ -39,11 +39,12 @@ class AuthRepository {
   }
 
   Future<String> matchCodeEntered(
-      {required String verificationCode, required String email}) async {
+      {required String verificationCode,
+      required String email,
+      required String userName}) async {
     final String resetToken = await authDataProvider.matchCodeEntered(
-      email: email,
-      verificationCode: verificationCode,
-    );
+        email: email, verificationCode: verificationCode, username: userName);
+
     return resetToken;
   }
 

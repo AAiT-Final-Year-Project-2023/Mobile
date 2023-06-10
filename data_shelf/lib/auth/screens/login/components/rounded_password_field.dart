@@ -5,10 +5,15 @@ import 'package:flutter/material.dart';
 class RoundedPasswordField extends StatefulWidget {
   final String hintText;
   final ValueChanged<String> onChanged;
+  final String? Function(String?)? validator;
+  final TextEditingController? controller;
+
   const RoundedPasswordField({
     super.key,
     this.hintText = "Password",
     required this.onChanged,
+    required this.validator,
+    this.controller,
   });
 
   @override
@@ -22,7 +27,7 @@ class _RoundedPasswordFieldState extends State<RoundedPasswordField> {
   @override
   void initState() {
     super.initState();
-    _textEditingController = TextEditingController();
+    _textEditingController = widget.controller ?? TextEditingController();
   }
 
   @override
@@ -34,7 +39,9 @@ class _RoundedPasswordFieldState extends State<RoundedPasswordField> {
   @override
   Widget build(BuildContext context) {
     return TextFieldContainer(
-        child: TextField(
+        child: TextFormField(
+      validator: widget.validator,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: _textEditingController,
       obscureText: _obscureText,
       onChanged: widget.onChanged,

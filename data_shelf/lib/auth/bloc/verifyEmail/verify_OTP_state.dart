@@ -10,11 +10,24 @@
 
 import 'package:equatable/equatable.dart';
 
-abstract class OTPVerificationState extends Equatable {
-  const OTPVerificationState();
+class OTPVerificationState extends Equatable {
+  final String code;
+  final String email;
+  final String username;
+  const OTPVerificationState(
+      {this.code = '', this.email = '', this.username = ''});
+
+  OTPVerificationState copyWith({
+    String? email,
+    String? code,
+    String? username,
+  }) {
+    return OTPVerificationState(
+        code: code ?? this.code, email: email ?? this.email);
+  }
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [this.code, this.email];
 }
 
 class OTPVerificationInitial extends OTPVerificationState {

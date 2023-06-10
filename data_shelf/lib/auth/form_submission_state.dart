@@ -28,5 +28,5 @@ class SubmissionFailed extends FormSubmissionState {
   const SubmissionFailed(this.exception, this.error);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [error];
 }

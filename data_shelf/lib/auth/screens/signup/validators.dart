@@ -3,11 +3,13 @@ class Validators {
     RegExp regExp =
         RegExp(r"^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$");
 
-    if (username?.length == 0) {
-      return 'Full Name is required!';
+    if (username?.isEmpty ?? true) {
+      return 'Username is required!';
+    } else if (!(username == null) & (username!.length < 6)) {
+      return 'Username must be at least 6 characters long!';
     }
 
-    if (!regExp.hasMatch(username!)) {
+    if (!regExp.hasMatch(username)) {
       return "Invalid input";
     }
 
@@ -43,7 +45,8 @@ class Validators {
     }
 
     if (!regExp.hasMatch(password!)) {
-      return 'Password must be at least 8 characters and contain a number, a  special character, a capital and a small letter.';
+      return 'Password is not strong enough';
+      // return 'Password must be at least 8 characters and contain a number, a  special character, a capital and a small letter.';
     }
   }
 

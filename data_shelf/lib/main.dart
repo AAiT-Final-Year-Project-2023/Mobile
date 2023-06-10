@@ -1,5 +1,5 @@
-import 'package:data_shelf/auth/bloc/signup/verify_OTP_bloc.dart';
-import 'package:data_shelf/auth/bloc/signup/verify_OTP_event.dart';
+import 'package:data_shelf/auth/bloc/verifyEmail/verify_OTP_bloc.dart';
+import 'package:data_shelf/auth/bloc/verifyEmail/verify_OTP_event.dart';
 import 'package:data_shelf/auth/repository/auth_repository.dart';
 import 'package:data_shelf/auth/screens/login/forgot_password_screen.dart';
 import 'package:data_shelf/auth/screens/login/login_screen.dart';
@@ -23,6 +23,36 @@ void main() {
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
+  final AuthRepository authRepo = new AuthRepository(
+      authDataProvider: AuthDataProvider(httpClient: http.Client()));
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return RepositoryProvider.value(
+        value: authRepo,
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'DataShelf',
+          theme: ThemeData(
+            primaryColor: primaryColor,
+            scaffoldBackgroundColor: Colors.white,
+          ),
+          // home: RouteGenerator.welcomePage,
+          onGenerateRoute: RouteGenerator.generateRoute,
+          home: WelcomeScreen(),
+          // home: const HomeScreen(),
+          // home: RequestPage(),
+          // home: LoginScreen(),
+          // home: ConfirmEmailScreen(),
+          // home: ForgotPasswordScreen(),
+          // home: PasswordResetScreen(),
+        ));
+  }
+}
+
+class MyApp2 extends StatelessWidget {
+  MyApp2({super.key});
   final AuthRepository authRepo = new AuthRepository(
       authDataProvider: AuthDataProvider(httpClient: http.Client()));
 

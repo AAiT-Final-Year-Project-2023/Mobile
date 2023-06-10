@@ -21,27 +21,23 @@ class SignupState extends Equatable {
   final String password;
   String? get isValidPassword => _validators.validateName(password);
   final FormSubmissionState formState;
-  final String phoneNumber;
 
   SignupState(
       {this.username = '',
       this.email = '',
       this.password = '',
-      this.phoneNumber = '',
       this.formState = const InitialFormStatus()});
 
   SignupState copyWith({
     String? username,
     String? email,
     String? password,
-    String? phoneNumber,
     FormSubmissionState? formState,
   }) {
     return SignupState(
         username: username ?? this.username,
         email: email ?? this.email,
         password: password ?? this.password,
-        phoneNumber: phoneNumber ?? this.phoneNumber,
         formState: formState ?? this.formState);
   }
 

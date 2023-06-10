@@ -10,6 +10,7 @@ import 'package:data_shelf/auth/screens/signup/components/background.dart';
 import 'package:data_shelf/auth/screens/signup/confirm_email_screen.dart';
 import 'package:data_shelf/auth/screens/signup/components/or_divider.dart';
 import 'package:data_shelf/auth/screens/signup/components/signup_with_google_button.dart';
+import 'package:data_shelf/auth/screens/signup/validators.dart';
 import 'package:data_shelf/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +27,7 @@ class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    var ar = AuthRepository(
+    var authRepo = AuthRepository(
         authDataProvider: AuthDataProvider(httpClient: http.Client()));
     return Background(
       child: SingleChildScrollView(
@@ -45,7 +46,12 @@ class Body extends StatelessWidget {
                 SizedBox(height: size.height * 0.05),
                 Text("Register", style: TextStyle(fontWeight: FontWeight.bold)),
                 SizedBox(height: size.height * 0.025),
-                RegistrationForm(),
+                BlocProvider(
+                  create: (_) => SignupBloc(
+                    authRepository: authRepo,
+                  ),
+                  child: RegistrationForm(),
+                ),
                 SizedBox(height: size.height * 0.015),
                 HaveAccountCheck(
                   login: false,
@@ -80,13 +86,18 @@ class RegistrationForm extends StatefulWidget {
 
 class _RegistrationFormState extends State<RegistrationForm> {
   final _formKey = GlobalKey<FormState>();
-  String username = '';
-  String email = '';
-  String password = '';
 
-  var emailController = TextEditingController();
-  var usernameController = TextEditingController();
-  var passwordController = TextEditingController();
+  var _emailController = TextEditingController();
+  var _usernameController = TextEditingController();
+  var _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _usernameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,54 +105,72 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
     return BlocListener<SignupBloc, SignupState>(
       bloc: BlocProvider.of<SignupBloc>(context),
-      listener: (BuildContext context, state) {},
+      listener: (BuildContext context, state) {
+        if (state.formState is SubmissionSuccess) {
+          debugPrint(
+              "[UI] User being transfered to confirm the user is user :) ");
+          debugPrint(
+              'The user is ${state.username} with email ${state.email} ');
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (BuildContext context) => ConfirmationEmailScreen(
+              username: state.username,
+              email: state.email,
+            ),
+          ));
+        } else if (state.formState is SubmissionFailed) {
+          // Show snackbar if an error occurs
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Something Went Wrong! Check Your Credentials."),
+              backgroundColor: Color.fromARGB(255, 198, 196, 194),
+            ),
+          );
+        }
+      },
       child: Form(
           key: _formKey,
           child: Column(
             children: [
               RoundedTextField(
-                controller: usernameController,
+                controller: _usernameController,
                 hintText: "Your Username",
                 onChanged: (value) {},
+                validator: Validators().validateName,
               ),
               RoundedTextField(
-                controller: emailController,
+                controller: _emailController,
                 hintText: "Your Email",
                 onChanged: (value) {},
+                icon: Icons.email_sharp,
+                validator: Validators().validateEmail,
               ),
               RoundedPasswordField(
+                controller: _passwordController,
+                validator: Validators().validatePassword,
                 onChanged: (value) {},
               ),
-              RoundedButton(
-                size: size,
-                text: "Register",
-                press: () {
-                  context.read<SignupBloc>().add(SignupWithEmailSubmitted(
-                        email: emailController.text,
-                        password: passwordController.text,
-                        username: usernameController.text,
-                      ));
-
-                  //         if (state.formState is SubmissionSuccess) {
-                  // debugPrint('from reg email = ${this.email}');
-                  // AuthCredentials credentials = new AuthCredentials(
-                  //     email: this.email,
-                  //     name: state.fullName,
-                  //     password: state.password);
-                  // Navigator.of(context).push(MaterialPageRoute(
-                  //   builder: (BuildContext context) => VerifyEmailPage(),
-                  //   settings: RouteSettings(arguments: credentials),
-                  // ));
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return ConfirmationEmailScreen(
-                            email: emailController.text);
-                      },
-                    ),
-                  );
+              BlocBuilder<SignupBloc, SignupState>(
+                builder: (context, state) {
+                  return state.formState is FormSubmitting
+                      ? CircularProgressIndicator()
+                      : RoundedButton(
+                          size: size,
+                          text: "Register",
+                          press: () {
+                            if (_formKey.currentState!.validate()) {
+                              print("[UI] Here is the input");
+                              print(
+                                  'name : ${_usernameController.text} \n password: ${_passwordController.text} \n email: ${_emailController.text}');
+                              context
+                                  .read<SignupBloc>()
+                                  .add(SignupWithEmailSubmitted(
+                                    email: _emailController.text,
+                                    password: _passwordController.text,
+                                    username: _usernameController.text,
+                                  ));
+                            }
+                          },
+                        );
                 },
               ),
             ],

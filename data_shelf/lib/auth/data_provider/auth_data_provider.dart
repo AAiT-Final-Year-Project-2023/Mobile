@@ -22,7 +22,9 @@ class AuthDataProvider {
       {required String username,
       required String email,
       required String password}) async {
-    debugPrint('$username, $email, $password');
+    debugPrint('[Provider] $username, $email, $password');
+    debugPrint(
+        "Trying to connect .................................................");
     final response = await httpClient.post(
       Uri.parse('$_baseURL/auth/signup'),
       headers: <String, String>{
@@ -31,11 +33,17 @@ class AuthDataProvider {
       body: userSignupEmailToJson(UserSignupEmail(
           username: username, email: email, password: password)),
     );
+    debugPrint('[Provider] Waiting for user to be Created in.');
     debugPrint(response.body);
     debugPrint(response.statusCode.toString());
     if (response.statusCode == 201) {
+      debugPrint('[Provider] Success user Created.');
+
       return true;
     } else {
+      debugPrint('[Provider] Error user not Created.');
+      debugPrint(jsonDecode(response.body)['body']);
+
       throw Exception(jsonDecode(response.body)['body']);
     }
   }
@@ -50,9 +58,12 @@ class AuthDataProvider {
       },
       body: jsonEncode(<String, dynamic>{"email": email, "password": password}),
     );
+    debugPrint('[Provider] Waiting for user to be Logged in.');
     if (response.statusCode == 200) {
+      debugPrint('[Provider] Success user Logged in.');
       return response.body;
     } else {
+      debugPrint('[Provider] Error user not logged in.');
       throw Exception('Failed to login user');
     }
   }
@@ -101,36 +112,56 @@ class AuthDataProvider {
   Future<bool> sendEmailForVerificationCode({
     required String email,
   }) async {
-    final response = await httpClient.put(
-      Uri.parse('$_baseURL/auth/forgot-password'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, dynamic>{
-        "email": email,
-      }),
-    );
-    if (response.statusCode == 201) {
-      return true;
-    } else {
-      throw Exception("Error_SENDING_EMAIL");
-    }
+    print("Sending Request for Email signup");
+    // final response = await httpClient.put(
+    //   Uri.parse('$_baseURL/auth/forgot-password'),
+    //   headers: <String, String>{
+    //     'Content-Type': 'application/json; charset=UTF-8',
+    //   },
+    //   body: jsonEncode(<String, dynamic>{
+    //     "email": email,
+    //   }),
+    // );
+    // if (response.statusCode == 201) {
+    //   return true;
+    // } else {
+    //   throw Exception("Error_SENDING_EMAIL");
+    // }
+    return true;
   }
 
   Future<String> matchCodeEntered(
-      {required String email, required String verificationCode}) async {
-    final response = await httpClient.post(
-      Uri.parse('$_baseURL/auth/verify'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, dynamic>{
-        "code": verificationCode,
-        "email": email,
-      }),
-    );
-    if (response.statusCode == 201) {
-      return jsonDecode(response.body)['access-token'];
+      {required String email,
+      required String verificationCode,
+      required String username}) async {
+    // final response = await httpClient.post(
+    //   Uri.parse('$_baseURL/auth/verify'),
+    //   headers: <String, String>{
+    //     'Content-Type': 'application/json; charset=UTF-8',
+    //   },
+    //   body: jsonEncode(<String, dynamic>{
+    //     "code": verificationCode,
+    //     "email": email,
+    //   })
+    // );
+
+    // if (response.statusCode == 201) {
+
+    //   var token = jsonDecode(response.body)['access-token'];
+    //   return token;
+    // } else {
+    //   throw Exception("Error_WHILE_SENDING_OTP");
+    // }
+    debugPrint(
+        '[Provider matchcode] ${email}, ${username}, ${verificationCode}');
+
+    final mockResponse = {
+      'statusCode': 201,
+      'body': jsonEncode({'access-token': 'your_fake_access_token'}),
+    };
+    // Simulate the API call and response
+    if (verificationCode == '123456') {
+      return jsonEncode({'access-token': 'your_fake_access_token'});
     } else {
       throw Exception("Error_WHILE_SENDING_OTP");
     }

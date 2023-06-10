@@ -3,6 +3,7 @@ import 'package:data_shelf/auth/screens/login/components/rounded_text_field.dart
 import 'package:data_shelf/auth/screens/login/components/text_field_container.dart';
 import 'package:data_shelf/auth/screens/login/login_screen.dart';
 import 'package:data_shelf/auth/screens/signup/confirm_email_screen.dart';
+import 'package:data_shelf/auth/screens/signup/validators.dart';
 import 'package:data_shelf/auth/screens/welcome/components/rounded_button.dart';
 import 'package:data_shelf/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -95,6 +96,7 @@ class _EmailInputFieldState extends State<EmailInputField> {
           ),
           Center(
             child: RoundedTextField(
+              validator: Validators().validateEmail,
               controller: emailController,
               hintText: "Your Email",
               onChanged: (value) {},

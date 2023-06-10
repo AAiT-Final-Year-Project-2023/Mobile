@@ -2,6 +2,7 @@ import 'package:data_shelf/auth/screens/login/components/rounded_password_field.
 import 'package:data_shelf/auth/screens/login/forgot_password_screen.dart';
 import 'package:data_shelf/auth/screens/login/login_screen.dart';
 import 'package:data_shelf/auth/screens/signup/components/background.dart';
+import 'package:data_shelf/auth/screens/signup/validators.dart';
 import 'package:data_shelf/auth/screens/welcome/components/rounded_button.dart';
 import 'package:data_shelf/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -84,6 +85,7 @@ class PasswordResetScreen extends StatelessWidget {
                 ),
                 Center(
                   child: RoundedPasswordField(
+                    validator: Validators().validatePassword,
                     onChanged: (value) {},
                   ),
                 ),
@@ -91,6 +93,7 @@ class PasswordResetScreen extends StatelessWidget {
                     style: TextStyle(color: Colors.black54)),
                 Center(
                   child: RoundedPasswordField(
+                    validator: Validators().validatePassword,
                     hintText: "Re-enter Password",
                     onChanged: (value) {},
                   ),

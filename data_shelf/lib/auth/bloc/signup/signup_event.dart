@@ -13,15 +13,6 @@ class SignUpWithGoogle extends SignupEvent {
   List<Object?> get props => throw UnimplementedError();
 }
 
-class SignupPasswordChanged extends SignupEvent {
-  final String password;
-
-  SignupPasswordChanged({required this.password});
-
-  @override
-  List<Object?> get props => [password];
-}
-
 class SignupWithEmailSubmitted extends SignupEvent {
   final String username;
   final String email;

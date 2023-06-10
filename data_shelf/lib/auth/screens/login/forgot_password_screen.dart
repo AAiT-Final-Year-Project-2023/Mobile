@@ -21,6 +21,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 builder: (context) {
                   return ConfirmationEmailScreen(
                     email: "",
+                    username: '',
                     // reset: true,
                   );
                   // return confirm_OTP_Screen();

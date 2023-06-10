@@ -10,10 +10,11 @@ abstract class OTPVerificationEvent extends Equatable {
 class OTPEnteredEvent extends OTPVerificationEvent {
   final String code;
   final String email;
-  const OTPEnteredEvent(this.code, this.email);
+  final String username;
+  const OTPEnteredEvent(this.code, this.email, this.username);
 
   @override
-  List<Object> get props => [code];
+  List<Object> get props => [this.code, this.email, this.username];
 }
 
 class ResendOTPEvent extends OTPVerificationEvent {
