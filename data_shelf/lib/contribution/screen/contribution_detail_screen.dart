@@ -67,7 +67,7 @@ class _ContributionDetailsScreenState extends State<ContributionDetailsScreen> {
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [primaryColor, primaryColorLight],
+              colors: [primaryColor, primaryColor],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),

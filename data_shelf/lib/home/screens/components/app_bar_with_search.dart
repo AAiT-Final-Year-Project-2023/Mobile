@@ -1,3 +1,4 @@
+import 'package:data_shelf/notification/screens/notification_screen.dart';
 import 'package:data_shelf/utils/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -68,7 +69,14 @@ class AppBarWithSearch extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NotificationScreen(),
+              ),
+            );
+          },
           icon: Icon(Icons.notifications_active_outlined),
           color: primaryColor,
         ),
