@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:data_shelf/utils/constants.dart';
 import 'package:data_shelf/home/screens/components/dataset_custom_card.dart';
 import 'package:data_shelf/home/screens/components/recent_activity_card.dart';
@@ -123,6 +125,11 @@ List<RequestListItem> requestItems = [
 
 class Body extends StatelessWidget {
   const Body({super.key});
+  final String _requests = '0';
+  final String _contributions = '0';
+  final String _totalEarnings = '0';
+  final String _currentBalance = '0';
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -131,17 +138,82 @@ class Body extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          titleWithIcon(Icon(Icons.timelapse_rounded), "Recents"),
-          Container(height: 180, child: listViewRecent()),
+          titleWithIcon(Icon(Icons.speaker_notes_outlined), "Your Info"),
+          // Container(height: 180, child: listViewRecent()),
+          // Section 1: Card with Bullet Points
+          Card(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildBulletPoint('$_requests Requests'),
+                        SizedBox(
+                          height: size.height * 0.02,
+                        ),
+                        _buildBulletPoint('$_contributions Contributions'),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildBulletPoint('$_totalEarnings Total Earnings'),
+                        SizedBox(
+                          height: size.height * 0.03,
+                        ),
+                        _buildBulletPoint('$_currentBalance Current Balance'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           titleWithIcon(Icon(Icons.dataset), "Datasets"),
           Container(height: 115, child: listViewDataset()),
           titleWithIcon(Icon(Icons.query_stats_outlined), "Requests"),
           // listViewRequest()
-          Container(height: 300, child: listViewRequest()),
+          new Expanded(child: listViewRequest()),
         ],
       ),
     );
     ;
+  }
+
+  Widget _buildBulletPoint(String text) {
+    final List<Color> bulletColors = [
+      Colors.green,
+      Colors.yellow,
+      Colors.orange,
+      Colors.red
+    ];
+    final random = Random();
+    final color = bulletColors[random.nextInt(bulletColors.length)];
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(width: 8.0),
+        Container(
+          width: 8.0,
+          height: 8.0,
+          decoration: BoxDecoration(
+            // shape: BoxShape.circle,
+            color: color,
+          ),
+        ),
+        SizedBox(width: 8.0),
+        Expanded(
+          child: Text(text, style: titleStyleSmallDark),
+        ),
+      ],
+    );
   }
 
   Row titleWithIcon(Icon icon, String title) {

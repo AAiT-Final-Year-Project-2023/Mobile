@@ -12,10 +12,11 @@ class AuthRepository {
 
   // calls the signin method of auth data provider with given email and password
   Future<String> login({
-    required String email,
+    required String username,
     required String password,
   }) async {
-    return await authDataProvider.signIn(email: email, password: password);
+    return await authDataProvider.signIn(
+        username: username, password: password);
   }
 
   Future<void> signup({

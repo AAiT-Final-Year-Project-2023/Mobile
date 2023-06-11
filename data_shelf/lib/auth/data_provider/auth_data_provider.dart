@@ -49,7 +49,34 @@ class AuthDataProvider {
     if (response.statusCode == 201) {
       debugPrint('[Provider] Success user Created.');
 
-      return true;
+      Map<String, dynamic> decodedResponse = jsonDecode(response.body);
+
+      var token = decodedResponse['access_token'];
+
+      // Fetch user data from /user/me endpoint using the obtained token
+      final userResponse = await httpClient.get(
+        Uri.parse('$_baseURL/user/me'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (userResponse.statusCode == 200) {
+        var userData = jsonDecode(userResponse.body);
+        var userModel = UserModel.fromJson(userData);
+        debugPrint(userModel.email);
+        debugPrint("Found user/me  saving to secure storage");
+        // Save the user data to secure storage
+
+        await secureStorage.saveUserData(userModel);
+
+        await secureStorage.writeSecureData('token', token);
+        return true;
+        // return userData;
+      } else {
+        throw Exception("Error_WHILE_FETCHING_USER_DATA");
+      }
     } else {
       debugPrint('[Provider] Error user not Created.');
       debugPrint(jsonDecode(response.body)['body']);
@@ -60,7 +87,7 @@ class AuthDataProvider {
 
 // sends post request to the api with the given email and password
   Future<String> signIn(
-      {required String email, required String password}) async {
+      {required String username, required String password}) async {
     var name_on_storage = await secureStorage.readSecureData("username");
     var email_on_storage = await secureStorage.readSecureData("email");
     var token_on_storage = await secureStorage.readSecureData("token");
@@ -73,17 +100,49 @@ class AuthDataProvider {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, dynamic>{"email": email, "password": password}),
+      body: jsonEncode(
+          <String, dynamic>{"username": username, "password": password}),
     );
     debugPrint('[Provider Signin] Waiting for user to be Logged in.');
 
-    if (response.statusCode == 200) {
-      var token = jsonDecode(response.body)['access-token'];
-      debugPrint('[Provider] Success user Logged in.');
-      debugPrint('The token is $token');
-      await secureStorage.writeSecureData('token', token);
-      await secureStorage.writeSecureData('email', email);
-      return response.body;
+    debugPrint(response.body);
+    debugPrint(response.statusCode.toString());
+    if (response.statusCode == 201) {
+      Map<String, dynamic> decodedResponse = jsonDecode(response.body);
+
+      var token = decodedResponse['access_token'];
+
+      debugPrint(
+          '[Provider] Success user ------------------------- Logged in.');
+
+      // Fetch user data from /user/me endpoint using the obtained token
+      final userResponse = await httpClient.get(
+        Uri.parse('$_baseURL/user/me'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      debugPrint(token);
+      debugPrint("Fetching user/me =====================================");
+      // return token;
+      if (userResponse.statusCode == 200) {
+        var userData = jsonDecode(userResponse.body);
+        var userModel = UserModel.fromJson(userData);
+        debugPrint(userModel.email);
+        debugPrint("Found user/me  saving to secure storage");
+        // Save the user data to secure storage
+
+        await secureStorage.saveUserData(userModel);
+
+        await secureStorage.writeSecureData('token', token);
+
+        return response.body;
+        // return userData;
+      } else {
+        throw Exception("Error_WHILE_FETCHING_USER_DATA");
+      }
     } else {
       debugPrint('[Provider] Error user not logged in.');
       throw Exception('Failed to login user');
@@ -109,7 +168,7 @@ class AuthDataProvider {
     debugPrint('[Provider] ---------- OTP RESPONSE ${response.body}}');
 
     if (response.statusCode == 201) {
-      var token = jsonDecode(response.body)['access-token'];
+      String token = jsonDecode(response.body)['access-token'];
       debugPrint('The token is $token');
       await secureStorage.writeSecureData('token', token);
       await secureStorage.writeSecureData('username', username);

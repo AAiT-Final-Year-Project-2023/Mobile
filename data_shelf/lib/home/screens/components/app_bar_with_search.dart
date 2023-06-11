@@ -69,6 +69,11 @@ class AppBarWithSearch extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           onPressed: () {},
+          icon: Icon(Icons.notifications_active_outlined),
+          color: primaryColor,
+        ),
+        IconButton(
+          onPressed: () {},
           icon: CircleAvatar(
             backgroundColor: primaryColor,
             child: Center(

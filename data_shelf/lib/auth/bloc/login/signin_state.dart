@@ -1,32 +1,26 @@
 import 'package:data_shelf/auth/form_submission_state.dart';
 import 'package:equatable/equatable.dart';
 
-class SignupState extends Equatable {
+class SigninState extends Equatable {
   final String username;
-  final String email;
   final String password;
   final FormSubmissionState formState;
 
-  SignupState(
+  SigninState(
       {this.username = '',
-      this.email = '',
       this.password = '',
       this.formState = const InitialFormStatus()});
 
-  SignupState copyWith({
+  SigninState copyWith({
     String? username,
-    String? email,
     String? password,
     FormSubmissionState? formState,
   }) {
-    return SignupState(
-        username: username ?? this.username,
-        email: email ?? this.email,
+    return SigninState(
         password: password ?? this.password,
         formState: formState ?? this.formState);
   }
 
   @override
-  List<Object?> get props =>
-      [this.email, this.username, this.password, this.formState];
+  List<Object?> get props => [this.password, this.formState];
 }
