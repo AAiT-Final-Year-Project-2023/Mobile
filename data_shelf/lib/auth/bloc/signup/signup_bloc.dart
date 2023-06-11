@@ -1,18 +1,3 @@
-// class authbloc extends bloc<Authevent,Authstate>
-// Repo =  repository obj()
-// onloginsubmitedd
-// try(
-//   emit loading :
-//     repo.loadiningfunction
-// emit success:
-
-// get the user created
-// save user.id to storage
-
-// )
-// catch
-// emit error
-
 import 'package:data_shelf/auth/bloc/signup/signup_event.dart';
 import 'package:data_shelf/auth/bloc/signup/signup_state.dart';
 import 'package:data_shelf/auth/form_submission_state.dart';

@@ -9,6 +9,7 @@ import 'package:data_shelf/routes.dart';
 import 'package:data_shelf/utils/constants.dart';
 import 'package:data_shelf/home/screens/home_screen.dart';
 import 'package:data_shelf/request/screen/request_create_screen.dart';
+import 'package:data_shelf/utils/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:data_shelf/auth/screens/welcome/welcome_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
   MyApp({super.key});
   final AuthRepository authRepo = new AuthRepository(
       authDataProvider: AuthDataProvider(httpClient: http.Client()));
-
+  final secureStorage = SecureStorage();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

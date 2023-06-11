@@ -1,13 +1,3 @@
-// class Auth_state:
-
-// class Auth_initial extends auth_state:
-
-// class Auth_succuss extends auth_state:
-// can have fields
-
-// class Auth_error extends auth_state:
-// class Auth_loading extends auth_state:
-
 import 'package:data_shelf/auth/form_submission_state.dart';
 import 'package:data_shelf/auth/screens/signup/validators.dart';
 import 'package:equatable/equatable.dart';

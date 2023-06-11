@@ -37,126 +37,122 @@ class _ConfirmationEmailScreenState extends State<ConfirmationEmailScreen> {
         authDataProvider: AuthDataProvider(httpClient: http.Client()));
 
     return BlocProvider(
-      create: (_) => OTPVerificationBloc2(
-        authRepository: authRepo,
-      ),
-      child: Scaffold(
-          body: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: BlocListener<OTPVerificationBloc2, OTPVerificationState>(
-                  listener: (context, state) {
-                if (state is OTPVerifiedState) {
-                  // Handle OTP verification success
-                  debugPrint("[UI] User being transfered to confirmed.");
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => HomeScreen(),
-                  ));
-                } else if (state is OTPErrorState) {
-                  // Handle OTP verification error
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Enterd OTP is incorrect! Try again."),
-                      backgroundColor: Color.fromARGB(255, 198, 196, 194),
-                    ),
-                  );
-
-                  // Default state, show the OTP input field
-                  child:
-                  SingleChildScrollView(
-                    child: SafeArea(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        // crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          emailIcon(size),
-                          SizedBox(height: height * 0.05),
-                          Text(
-                            'Enter the OTP received in your email',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 18.0),
+        create: (_) => OTPVerificationBloc2(
+              authRepository: authRepo,
+            ),
+        child: Scaffold(
+            body: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: BlocListener<OTPVerificationBloc2, OTPVerificationState>(
+                    listener: (context, state) {
+                      if (state is OTPVerifiedState) {
+                        // Handle OTP verification success
+                        debugPrint("[UI] User being transfered to confirmed.");
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => HomeScreen(),
+                        ));
+                      } else if (state is OTPErrorState) {
+                        // Handle OTP verification error
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content:
+                                Text("Enterd OTP is incorrect! Try again."),
+                            backgroundColor: Color.fromARGB(255, 198, 196, 194),
                           ),
-                          SizedBox(height: height * 0.05),
-                          TextFieldContainer(
-                            child: TextField(
-                              controller: otpController,
-                              maxLength: 6,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                    RegExp(r'[0-9]')),
-                              ],
-                              decoration: InputDecoration(
-                                labelText: 'OTP',
-                                errorText: showErrorText
-                                    ? 'OTP must be 6 digits'
-                                    : null,
-                                border: InputBorder.none,
+                        );
+                      }
+                    },
+                    child: SingleChildScrollView(
+                      child: SafeArea(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          // crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            emailIcon(size),
+                            SizedBox(height: height * 0.05),
+                            Text(
+                              'Enter the OTP received in your email',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 18.0),
+                            ),
+                            SizedBox(height: height * 0.05),
+                            TextFieldContainer(
+                              child: TextField(
+                                controller: otpController,
+                                maxLength: 6,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9]')),
+                                ],
+                                decoration: InputDecoration(
+                                  labelText: 'OTP',
+                                  errorText: showErrorText
+                                      ? 'OTP must be 6 digits'
+                                      : null,
+                                  border: InputBorder.none,
+                                ),
+                                style: TextStyle(fontSize: 15.0),
+                                onChanged: (value) {
+                                  setState(() {
+                                    showErrorText = value.length < 6;
+                                  });
+                                },
                               ),
-                              style: TextStyle(fontSize: 15.0),
-                              onChanged: (value) {
-                                setState(() {
-                                  showErrorText = value.length < 6;
-                                });
+                            ),
+                            // OTPInputField(),
+                            SizedBox(height: height * 0.02),
+                            BlocBuilder<OTPVerificationBloc2,
+                                OTPVerificationState>(
+                              builder: (context, state) {
+                                return state is OTPVerifyingState
+                                    ? CircularProgressIndicator()
+                                    : RoundedButton(
+                                        text: "Verify OTP",
+                                        size: size,
+                                        color: isInputValid
+                                            ? primaryColor
+                                            : Colors.grey,
+                                        press: isInputValid
+                                            ? () {
+                                                String enteredOTP =
+                                                    otpController.text;
+
+                                                BlocProvider.of<
+                                                            OTPVerificationBloc2>(
+                                                        context)
+                                                    .add(OTPEnteredEvent(
+                                                        enteredOTP,
+                                                        widget.email,
+                                                        widget.username));
+                                              }
+                                            : () {
+                                                null;
+                                              },
+                                      );
                               },
                             ),
-                          ),
-                          // OTPInputField(),
-                          SizedBox(height: height * 0.02),
-                          BlocBuilder<OTPVerificationBloc2,
-                              OTPVerificationState>(
-                            builder: (context, state) {
-                              return state is OTPVerificationState
-                                  ? CircularProgressIndicator()
-                                  : RoundedButton(
-                                      text: "Verify OTP",
-                                      size: size,
-                                      color: isInputValid
-                                          ? primaryColor
-                                          : Colors.grey,
-                                      press: isInputValid
-                                          ? () {
-                                              String enteredOTP =
-                                                  otpController.text;
 
-                                              BlocProvider.of<
-                                                          OTPVerificationBloc2>(
-                                                      context)
-                                                  .add(OTPEnteredEvent(
-                                                      enteredOTP,
-                                                      widget.email,
-                                                      widget.username));
-                                            }
-                                          : () {
-                                              null;
-                                            },
-                                    );
-                            },
-                          ),
-
-                          RoundedButton(
-                            text: "Resend",
-                            // border: true, // not currently working
-                            color: primaryColorLight,
-                            size: size,
-                            press: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return LoginScreen(); // TODO: RESEND
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        ],
+                            RoundedButton(
+                              text: "Resend",
+                              // border: true, // not currently working
+                              color: primaryColorLight,
+                              size: size,
+                              press: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return LoginScreen(); // TODO: RESEND
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                }
-                ;
-              }))),
-    );
+                    )))));
   }
 
   Widget emailIcon(Size size) {

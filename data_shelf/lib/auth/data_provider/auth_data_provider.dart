@@ -7,14 +7,17 @@
 // API call and response json file decode
 
 import 'dart:convert';
+import 'package:data_shelf/auth/models/user_model.dart';
 import 'package:data_shelf/auth/models/user_signup.dart';
 import 'package:data_shelf/utils/config.dart';
+import 'package:data_shelf/utils/storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 class AuthDataProvider {
   final _baseURL = BASE_URL;
   final http.Client httpClient;
+  SecureStorage secureStorage = SecureStorage();
 
   AuthDataProvider({required this.httpClient});
 
@@ -25,6 +28,13 @@ class AuthDataProvider {
     debugPrint('[Provider] $username, $email, $password');
     debugPrint(
         "Trying to connect .................................................");
+    var name_on_storage = await secureStorage.readSecureData("username");
+    var email_on_storage = await secureStorage.readSecureData("email");
+    var token_on_storage = await secureStorage.readSecureData("token");
+
+    debugPrint(
+        '[Provider SignUn] Current Storge status:  $name_on_storage | $email_on_storage | $token_on_storage');
+
     final response = await httpClient.post(
       Uri.parse('$_baseURL/auth/signup'),
       headers: <String, String>{
@@ -51,6 +61,13 @@ class AuthDataProvider {
 // sends post request to the api with the given email and password
   Future<String> signIn(
       {required String email, required String password}) async {
+    var name_on_storage = await secureStorage.readSecureData("username");
+    var email_on_storage = await secureStorage.readSecureData("email");
+    var token_on_storage = await secureStorage.readSecureData("token");
+
+    debugPrint(
+        '[Provider SignIn] Current Storge status:  $name_on_storage | $email_on_storage | $token_on_storage');
+
     final response = await httpClient.post(
       Uri.parse('$_baseURL/auth/signin'),
       headers: <String, String>{
@@ -58,14 +75,62 @@ class AuthDataProvider {
       },
       body: jsonEncode(<String, dynamic>{"email": email, "password": password}),
     );
-    debugPrint('[Provider] Waiting for user to be Logged in.');
+    debugPrint('[Provider Signin] Waiting for user to be Logged in.');
+
     if (response.statusCode == 200) {
+      var token = jsonDecode(response.body)['access-token'];
       debugPrint('[Provider] Success user Logged in.');
+      debugPrint('The token is $token');
+      await secureStorage.writeSecureData('token', token);
+      await secureStorage.writeSecureData('email', email);
       return response.body;
     } else {
       debugPrint('[Provider] Error user not logged in.');
       throw Exception('Failed to login user');
     }
+  }
+
+  Future<String> matchCodeEntered(
+      {required String email,
+      required String verificationCode,
+      required String username}) async {
+    debugPrint(
+        '[Provider matchCodeEntered] ---------- OTP RESPONSE --- $email ');
+
+    final response = await httpClient.post(Uri.parse('$_baseURL/auth/verify'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          "code": verificationCode,
+          "email": email,
+        }));
+
+    debugPrint('[Provider] ---------- OTP RESPONSE ${response.body}}');
+
+    if (response.statusCode == 201) {
+      var token = jsonDecode(response.body)['access-token'];
+      debugPrint('The token is $token');
+      await secureStorage.writeSecureData('token', token);
+      await secureStorage.writeSecureData('username', username);
+      await secureStorage.writeSecureData('email', email);
+      return token;
+    } else {
+      throw Exception("Error_WHILE_SENDING_OTP");
+    }
+    // debugPrint(
+    //     '[Provider matchcode] ${email}, ${username}, ${verificationCode}');
+
+    // final mockResponse = {
+    //   'statusCode': 201,
+    //   'body': jsonEncode({'access-token': 'your_fake_access_token'}),
+    // };
+    // // Simulate the API call and response
+    // if (verificationCode == '123456') {
+    //   return jsonEncode({'access-token': 'your_fake_access_token'});
+    // } else {
+    //   throw Exception("Error_WHILE_SENDING_OTP");
+    // }
   }
 
   // sends post request to the api with the token
@@ -91,6 +156,7 @@ class AuthDataProvider {
     }
   }
 
+// not using this
   Future<bool> verifyEmail(
       {required String email, required int otpCode}) async {
     final response = await httpClient.post(
@@ -109,62 +175,26 @@ class AuthDataProvider {
     throw Exception(jsonDecode(response.body)["message"]);
   }
 
-  Future<bool> sendEmailForVerificationCode({
+  Future<bool> resendOTP({
+    required String username,
     required String email,
   }) async {
-    print("Sending Request for Email signup");
-    // final response = await httpClient.put(
-    //   Uri.parse('$_baseURL/auth/forgot-password'),
-    //   headers: <String, String>{
-    //     'Content-Type': 'application/json; charset=UTF-8',
-    //   },
-    //   body: jsonEncode(<String, dynamic>{
-    //     "email": email,
-    //   }),
-    // );
-    // if (response.statusCode == 201) {
-    //   return true;
-    // } else {
-    //   throw Exception("Error_SENDING_EMAIL");
-    // }
-    return true;
-  }
-
-  Future<String> matchCodeEntered(
-      {required String email,
-      required String verificationCode,
-      required String username}) async {
-    // final response = await httpClient.post(
-    //   Uri.parse('$_baseURL/auth/verify'),
-    //   headers: <String, String>{
-    //     'Content-Type': 'application/json; charset=UTF-8',
-    //   },
-    //   body: jsonEncode(<String, dynamic>{
-    //     "code": verificationCode,
-    //     "email": email,
-    //   })
-    // );
-
-    // if (response.statusCode == 201) {
-
-    //   var token = jsonDecode(response.body)['access-token'];
-    //   return token;
-    // } else {
-    //   throw Exception("Error_WHILE_SENDING_OTP");
-    // }
-    debugPrint(
-        '[Provider matchcode] ${email}, ${username}, ${verificationCode}');
-
-    final mockResponse = {
-      'statusCode': 201,
-      'body': jsonEncode({'access-token': 'your_fake_access_token'}),
-    };
-    // Simulate the API call and response
-    if (verificationCode == '123456') {
-      return jsonEncode({'access-token': 'your_fake_access_token'});
+    print("Sending resend OTP Request");
+    final response = await httpClient.put(
+      Uri.parse('$_baseURL/auth/forgot-password'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        "email": email,
+      }),
+    );
+    if (response.statusCode == 201) {
+      return true;
     } else {
-      throw Exception("Error_WHILE_SENDING_OTP");
+      throw Exception("Error_SENDING_EMAIL");
     }
+    // return true;
   }
 
   // sends the put request to the api with the token and the given new password
@@ -185,6 +215,36 @@ class AuthDataProvider {
     if (response.statusCode == 201) {
     } else {
       throw Exception("Error_WHILE_SENDING_OTP");
+    }
+  }
+
+  Future<String> finduser() async {
+    var token = await secureStorage.readSecureData("token");
+
+    // Fetch user data from /user/me endpoint using the obtained token
+    final userResponse = await httpClient.get(
+      Uri.parse('$_baseURL/user/me'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    debugPrint(token);
+    debugPrint("Fetching user/me =====================================");
+    debugPrint(userResponse.toString());
+
+    // return token;
+    if (userResponse.statusCode == 200) {
+      var userData = jsonDecode(userResponse.body);
+      var userModel = UserModel.fromJson(userData);
+      debugPrint("Found user/me  saving to secure storage");
+      // Save the user data to secure storage
+
+      await secureStorage.saveUserData(userModel);
+      return userData;
+    } else {
+      throw Exception("Error_WHILE_FETCHING_USER_DATA");
     }
   }
 }

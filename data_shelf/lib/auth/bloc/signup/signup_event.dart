@@ -1,8 +1,3 @@
-// class Auth_event:
-
-// class signupgoogle extends authevent
-// class signupemail extends authevent
-
 import 'package:equatable/equatable.dart';
 
 abstract class SignupEvent extends Equatable {}

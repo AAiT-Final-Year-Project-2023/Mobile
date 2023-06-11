@@ -32,9 +32,11 @@ class AuthRepository {
     return await authDataProvider.verifyEmail(email: email, otpCode: otpCode);
   }
 
-  Future<bool> sendEmailForVerificationCode(String email) async {
-    return await authDataProvider.sendEmailForVerificationCode(
+  Future<bool> resendOTP(
+      {required String email, required String username}) async {
+    return await authDataProvider.resendOTP(
       email: email,
+      username: username,
     );
   }
 
