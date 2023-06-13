@@ -1,10 +1,19 @@
 import 'dart:math';
 
+import 'package:data_shelf/home/bloc/user_info_bloc.dart';
+import 'package:data_shelf/home/bloc/user_info_state.dart';
+import 'package:data_shelf/home/data_provider/user_info_data_provider.dart';
+import 'package:data_shelf/home/repository/user_info_repository.dart';
 import 'package:data_shelf/utils/constants.dart';
 import 'package:data_shelf/home/screens/components/dataset_custom_card.dart';
 import 'package:data_shelf/home/screens/components/recent_activity_card.dart';
 import 'package:data_shelf/home/screens/components/request_list_item.dart';
+import 'package:data_shelf/utils/storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
+
+import '../../bloc/user_info_event.dart';
 
 List<RecentActivity> recentActivities = [
   RecentActivity(
@@ -123,67 +132,115 @@ List<RequestListItem> requestItems = [
   // Add more items here
 ];
 
-class Body extends StatelessWidget {
+class Body extends StatefulWidget {
   const Body({super.key});
-  final String _requests = '0';
-  final String _contributions = '0';
-  final String _totalEarnings = '0';
-  final String _currentBalance = '0';
+
+  @override
+  State<Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
+  final String _requests = '1';
+
+  final String _contributions = '1';
+
+  final String _totalEarnings = '1';
+
+  final String _currentBalance = '1';
+
+  final UserInfoBloc uib = UserInfoBloc(UserInfoRepository(
+      userInfoDataProvider: UserInfoDataProvider(httpClient: http.Client())));
+
+  @override
+  void initState() {
+    uib.add(FetchUserInfoEvent());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          titleWithIcon(Icon(Icons.speaker_notes_outlined), "Your Info"),
-          // Container(height: 180, child: listViewRecent()),
-          // Section 1: Card with Bullet Points
-          Card(
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildBulletPoint('$_requests Requests'),
-                        SizedBox(
-                          height: size.height * 0.02,
-                        ),
-                        _buildBulletPoint('$_contributions Contributions'),
-                      ],
+
+    return BlocProvider(
+      create: (context) => uib,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            titleWithIcon(Icon(Icons.speaker_notes_outlined), "Your Info"),
+            // Container(height: 180, child: listViewRecent()),
+            // Section 1: Card with Bullet Points
+            BlocBuilder<UserInfoBloc, UserInfoState>(
+              builder: (context, state) {
+                if (state is UserInfoInitial) {
+                  print("[HOME UI]Initial");
+                  return Center(child: CircularProgressIndicator());
+                } else if (state is UserInfoLoaded) {
+                  print("[HOME UI] loaded");
+
+                  var usermodel = state.userModel;
+                  print(usermodel);
+                  return userInfoCard(size);
+                } else if (state is UserInfoError) {
+                  return Center(
+                    child: Container(
+                      child: Text(state.errorMessage),
                     ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildBulletPoint('$_totalEarnings Total Earnings'),
-                        SizedBox(
-                          height: size.height * 0.03,
-                        ),
-                        _buildBulletPoint('$_currentBalance Current Balance'),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                  );
+                } else {
+                  return Container(
+                    child: Text("Check your connection"),
+                  );
+                }
+              },
             ),
-          ),
-          titleWithIcon(Icon(Icons.dataset), "Datasets"),
-          Container(height: 115, child: listViewDataset()),
-          titleWithIcon(Icon(Icons.query_stats_outlined), "Requests"),
-          // listViewRequest()
-          new Expanded(child: listViewRequest()),
-        ],
+            titleWithIcon(Icon(Icons.dataset), "Datasets"),
+            Container(height: 115, child: listViewDataset()),
+            titleWithIcon(Icon(Icons.query_stats_outlined), "Requests"),
+            // listViewRequest()
+            new Expanded(child: listViewRequest()),
+          ],
+        ),
       ),
     );
     ;
+  }
+
+  Widget userInfoCard(Size size) {
+    return Card(
+        child: Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildBulletPoint('$_requests Requests'),
+                SizedBox(
+                  height: size.height * 0.02,
+                ),
+                _buildBulletPoint('$_contributions Contributions'),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildBulletPoint('$_totalEarnings Total Earnings'),
+                SizedBox(
+                  height: size.height * 0.03,
+                ),
+                _buildBulletPoint('$_currentBalance Current Balance'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ));
   }
 
   Widget _buildBulletPoint(String text) {
