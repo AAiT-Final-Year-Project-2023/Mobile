@@ -144,9 +144,9 @@ class _BodyState extends State<Body> {
 
   final String _contributions = '1';
 
-  final String _totalEarnings = '1';
+  late String _totalEarnings = '1';
 
-  final String _currentBalance = '1';
+  late String _currentBalance = '1';
 
   final UserInfoBloc uib = UserInfoBloc(UserInfoRepository(
       userInfoDataProvider: UserInfoDataProvider(httpClient: http.Client())));
@@ -174,13 +174,15 @@ class _BodyState extends State<Body> {
             BlocBuilder<UserInfoBloc, UserInfoState>(
               builder: (context, state) {
                 if (state is UserInfoInitial) {
-                  print("[HOME UI]Initial");
+                  print("[HOME UI]Initial*******************");
                   return Center(child: CircularProgressIndicator());
                 } else if (state is UserInfoLoaded) {
                   print("[HOME UI] loaded");
 
                   var usermodel = state.userModel;
                   print(usermodel);
+                  _totalEarnings = usermodel.totalEarnings.toString();
+                  _currentBalance = usermodel.currentBalance.toString();
                   return userInfoCard(size);
                 } else if (state is UserInfoError) {
                   return Center(
@@ -208,6 +210,8 @@ class _BodyState extends State<Body> {
   }
 
   Widget userInfoCard(Size size) {
+    final color_1 = Colors.blue;
+    final color_2 = Colors.orange;
     return Card(
         child: Padding(
       padding: EdgeInsets.all(16.0),
@@ -218,11 +222,11 @@ class _BodyState extends State<Body> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildBulletPoint('$_requests Requests'),
+                _buildBulletPoint('$_requests Requests', color_2),
                 SizedBox(
                   height: size.height * 0.02,
                 ),
-                _buildBulletPoint('$_contributions Contributions'),
+                _buildBulletPoint('$_contributions Contributions', color_1),
               ],
             ),
           ),
@@ -230,11 +234,11 @@ class _BodyState extends State<Body> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildBulletPoint('$_totalEarnings Total Earnings'),
+                _buildBulletPoint('$_totalEarnings Total Earnings', color_1),
                 SizedBox(
                   height: size.height * 0.03,
                 ),
-                _buildBulletPoint('$_currentBalance Current Balance'),
+                _buildBulletPoint('$_currentBalance Current Balance', color_2),
               ],
             ),
           ),
@@ -243,32 +247,33 @@ class _BodyState extends State<Body> {
     ));
   }
 
-  Widget _buildBulletPoint(String text) {
-    final List<Color> bulletColors = [
-      Colors.green,
-      Colors.yellow,
-      Colors.orange,
-      Colors.red
-    ];
-    final random = Random();
-    final color = bulletColors[random.nextInt(bulletColors.length)];
-
+  Widget _buildBulletPoint(String text, Color color) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(width: 8.0),
-        Container(
-          width: 8.0,
-          height: 8.0,
-          decoration: BoxDecoration(
-            // shape: BoxShape.circle,
-            color: color,
+        Center(
+          child: Container(
+            width: 4.0,
+            height: 20.0,
+            decoration: BoxDecoration(
+              // shape: BoxShape.circle,
+              color: color,
+            ),
           ),
         ),
         SizedBox(width: 8.0),
-        Expanded(
-          child: Text(text, style: titleStyleSmallDark),
+        Center(
+          child: Expanded(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(text, style: titleStyleSmallDark),
+            ),
+          ),
         ),
+        // Expanded(
+        //   child: Text(text, style: titleStyleSmallDark),
+        // ),
       ],
     );
   }

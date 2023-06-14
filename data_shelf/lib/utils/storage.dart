@@ -27,7 +27,8 @@ class SecureStorage {
         key: 'currentBalance', value: user.currentBalance.toString());
     await storage.write(
         key: 'totalEarnings', value: user.totalEarnings.toString());
-    await storage.write(key: 'bankInformation', value: user.bankInformation);
+    await storage.write(
+        key: 'bankInformation', value: user.bankInformation.toString());
     // Save other user data properties to secure storage as needed
   }
 

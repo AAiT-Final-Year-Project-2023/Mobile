@@ -2,7 +2,7 @@ import 'package:data_shelf/utils/constants.dart';
 import 'package:data_shelf/contribution/models/contribution.dart';
 import 'package:data_shelf/contribution/screen/components/contribution_card.dart';
 import 'package:data_shelf/contribution/screen/contribution_detail_screen.dart';
-import 'package:data_shelf/dataset/screen/components/page_title_text.dart';
+import 'package:data_shelf/dataset/screens/components/page_title_text.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatelessWidget {

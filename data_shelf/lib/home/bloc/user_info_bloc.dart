@@ -10,8 +10,12 @@ class UserInfoBloc extends Bloc<UserInfoEvent, UserInfoState> {
     on<FetchUserInfoEvent>((event, emit) async {
       try {
         final userInfo = await userInfoRepository.getUserInfo();
+        print('[User Bloc] userinfo fetched');
+        print(userInfo);
         emit(UserInfoLoaded(userInfo));
       } catch (e) {
+        print("[UserInfo] error happend");
+        print(e);
         emit(UserInfoError(e.toString()));
       }
     });

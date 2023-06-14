@@ -52,8 +52,8 @@ class AuthRepository {
   }
 
 //calls continuewithgoogle method of authdataprovider with the token
-  Future<String> continueWithGoogle({required String? token}) async {
-    return await authDataProvider.continueWithGoogle(token: token);
+  Future<String> continueWithGoogle() async {
+    return await authDataProvider.continueWithGoogle();
   }
 
   //calls updateforgottenpassowrd method of authdataprovider with the token and newpassword

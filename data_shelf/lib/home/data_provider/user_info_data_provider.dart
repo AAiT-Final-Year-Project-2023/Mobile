@@ -18,10 +18,9 @@ class UserInfoDataProvider {
     await secureStorage.readSecureData("email");
     await secureStorage.readSecureData("token");
     var userData = await secureStorage.getUserData();
-    print("---------------------------");
-    print(userData['token'].runtimeType);
+    // print("-------------GETTING USER INFO--------------");
     String? token = await userData['token'];
-    print(token);
+    // print(token);
     final userResponse = await httpClient.get(
       Uri.parse('$_baseURL/user/me'),
       headers: <String, String>{
@@ -29,14 +28,16 @@ class UserInfoDataProvider {
         'Authorization': 'Bearer $token',
       },
     );
-    print(userResponse.body.toString());
+    // print(userResponse.body.toString());
     if (userResponse.statusCode == 200) {
       var userData = jsonDecode(userResponse.body);
       var userModel = UserModel.fromJson(userData);
-      debugPrint("Found user/me  saving to secure storage");
+      print(userModel.emailIsValid);
+      // debugPrint("Found user/me  saving to secure storage");
       // Save the user data to secure storage
 
       await secureStorage.saveUserData(userModel);
+      // debugPrint("user saved");
       return userModel;
     } else {
       throw Exception("Error_WHILE_FETCHING_USER_DATA");

@@ -177,35 +177,16 @@ class AuthDataProvider {
     } else {
       throw Exception("Error_WHILE_SENDING_OTP");
     }
-    // debugPrint(
-    //     '[Provider matchcode] ${email}, ${username}, ${verificationCode}');
-
-    // final mockResponse = {
-    //   'statusCode': 201,
-    //   'body': jsonEncode({'access-token': 'your_fake_access_token'}),
-    // };
-    // // Simulate the API call and response
-    // if (verificationCode == '123456') {
-    //   return jsonEncode({'access-token': 'your_fake_access_token'});
-    // } else {
-    //   throw Exception("Error_WHILE_SENDING_OTP");
-    // }
   }
 
   // sends post request to the api with the token
-  Future<String> continueWithGoogle({
-    required String? token,
-  }) async {
+  Future<String> continueWithGoogle() async {
     final response = await httpClient.post(
-      Uri.parse('$_baseURL/auth/continue-with-google'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, dynamic>{
-        "token": token,
-        "roleId": "61315200b7a8b20d5d94f63b"
-      }),
-    );
+        Uri.parse('$_baseURL/auth/continue-with-google'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+
     debugPrint(response.statusCode.toString());
     debugPrint(response.body);
     if (response.statusCode == 200) {

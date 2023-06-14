@@ -5,6 +5,7 @@ import 'package:data_shelf/auth/screens/login/forgot_password_screen.dart';
 import 'package:data_shelf/auth/screens/login/login_screen.dart';
 import 'package:data_shelf/auth/screens/login/password_reset_screen.dart';
 import 'package:data_shelf/auth/screens/signup/confirm_email_screen.dart';
+import 'package:data_shelf/dataset/screens/dataset_screen.dart';
 import 'package:data_shelf/routes.dart';
 import 'package:data_shelf/utils/constants.dart';
 import 'package:data_shelf/home/screens/home_screen.dart';
@@ -82,8 +83,9 @@ class MyApp2 extends StatelessWidget {
               ),
               // home: RouteGenerator.welcomePage,
               onGenerateRoute: RouteGenerator.generateRoute,
-              home: WelcomeScreen(),
+              // home: WelcomeScreen(),
               // home: const HomeScreen(),
+              home: DatasetScreen(),
               // home: RequestPage(),
               // home: LoginScreen(),
               // home: ConfirmEmailScreen(),

@@ -17,3 +17,5 @@ const TextStyle titleStyleSmall =
     TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey);
 TextStyle titleStyleSmallDark = TextStyle(
     fontSize: 18, fontWeight: FontWeight.w600, color: Colors.grey.shade800);
+TextStyle datasetTitle = TextStyle(
+    fontSize: 16, fontWeight: FontWeight.w600, color: Colors.grey.shade800);
