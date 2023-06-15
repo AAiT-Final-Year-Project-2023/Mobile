@@ -1,7 +1,9 @@
-class DatasetEvent {}
+class UploadDatasetEvent {}
 
-class LoadDatasetEvent extends DatasetEvent {}
+class FileSelectedEvent extends UploadDatasetEvent {
+  final String selectedFilePath;
 
-class FetchDatasetDescriptionEvent extends DatasetEvent {}
+  FileSelectedEvent({required this.selectedFilePath});
+}
 
-class DownoadDatasetEvent extends DatasetEvent {}
+class UploadDatasetClickedEvent extends UploadDatasetEvent {}

@@ -3,6 +3,7 @@ import 'package:data_shelf/dataset/bloc/load_dataset/dataset_event.dart';
 import 'package:data_shelf/dataset/data_provider/dataset_data_provider.dart';
 import 'package:data_shelf/dataset/models/dataset_model.dart';
 import 'package:data_shelf/dataset/repository/dataset_repository.dart';
+import 'package:data_shelf/dataset/screens/dataset_details_screen.dart';
 import 'package:data_shelf/dataset/screens/dataset_upload_screen.dart';
 import 'package:data_shelf/utils/constants.dart';
 import 'package:data_shelf/contribution/screen/components/body.dart';
@@ -364,13 +365,25 @@ class _BodyState extends State<Body> {
                   // ),
                   title: Row(
                     children: [
-                      SizedBox(
-                        width: s.width * 0.7,
-                        child: Text(
-                          item.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: datasetTitle,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DatasetDetailsScreen(
+                                dataset: item,
+                              ),
+                            ),
+                          );
+                        },
+                        child: SizedBox(
+                          width: s.width * 0.7,
+                          child: Text(
+                            item.title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: datasetTitle,
+                          ),
                         ),
                       ),
                       // Icon(Icons.download_sharp)
@@ -407,13 +420,6 @@ class _BodyState extends State<Body> {
                               ],
                             ),
                           ),
-                          Text('${item.user.username}'),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('${item.createdAt}'),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -430,9 +436,16 @@ class _BodyState extends State<Body> {
                           ),
                         ],
                       ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Text('${item.createdAt}'),
+                            Text('${item.user.username}'),
+                            Text('Jun 14')
+                          ]),
                       SizedBox(height: s.height * 0.005),
                       Container(
-                        height: 50,
+                        height: 35,
                         decoration: BoxDecoration(
                             // color: primaryColorLight, // Background color
                             borderRadius: BorderRadius.circular(19),
@@ -444,7 +457,7 @@ class _BodyState extends State<Body> {
                             IconButton(
                               icon: Icon(
                                 Icons.arrow_drop_up_outlined,
-                                size: 40,
+                                size: 25,
                               ),
                               onPressed: () {
                                 // TODO: Handle upvote button tap
@@ -455,13 +468,13 @@ class _BodyState extends State<Body> {
                               ((item.upvotedBy).length -
                                       (item.upvotedBy).length)
                                   .toString(),
-                              style: TextStyle(fontSize: 15),
+                              style: TextStyle(fontSize: 13),
                             ),
                             // SizedBox(width: 8),
                             IconButton(
                               icon: Icon(
                                 Icons.arrow_drop_down_outlined,
-                                size: 40,
+                                size: 25,
                               ),
                               onPressed: () {
                                 // TODO: Handle downvote button tap

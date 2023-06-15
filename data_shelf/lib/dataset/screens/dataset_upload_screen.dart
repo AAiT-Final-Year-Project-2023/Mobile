@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/services.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../../home/screens/components/container_with_border.dart';
 
@@ -16,9 +18,11 @@ class DatasetUploadScreen extends StatefulWidget {
 }
 
 class _DatasetUploadScreenState extends State<DatasetUploadScreen> {
+  final _formKey = GlobalKey<FormState>();
   String _selectedFilePath = '';
-  String _title = '';
-  String _description = '';
+  var _title_controller = TextEditingController();
+  var _description_controller = TextEditingController();
+  var _labels = [];
   String _selectedDataType = 'Image';
   List<String> _dataTypes = ['Image', 'Audio', 'Video', 'Text'];
 
@@ -60,6 +64,15 @@ class _DatasetUploadScreenState extends State<DatasetUploadScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+        child: uploadFrom(size, context),
+      ),
+    );
+  }
+
+  Form uploadFrom(Size size, BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -78,45 +91,59 @@ class _DatasetUploadScreenState extends State<DatasetUploadScreen> {
                         Text("Click to upload"),
                       ])),
             ),
-            // ElevatedButton(
-            //   onPressed: _openFileExplorer,
-            //   child: Text('Upload'),
-            // ),
             SizedBox(height: 16.0),
             Text(
-              'Selected File: $_selectedFilePath',
-              style: TextStyle(fontSize: 16.0),
-            ),
+                _selectedFilePath != ''
+                    ? 'Selected File: $_selectedFilePath'
+                    : "Selected File: No selected file",
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: _selectedFilePath != ''
+                      ? Colors.green.shade400
+                      : Colors.red.shade400,
+                )),
             SizedBox(height: 16.0),
-            TextField(
-              onChanged: (value) {
-                setState(() {
-                  _title = value;
-                });
-              },
+            TextFormField(
+              controller: _title_controller,
+              onChanged: (value) {},
               decoration: InputDecoration(
                 labelText: 'Title',
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Title cannot be empty.';
+                }
+                return null;
+              },
             ),
             SizedBox(height: 16.0),
-            TextField(
-              onChanged: (value) {
-                setState(() {
-                  _description = value;
-                });
-              },
+            TextFormField(
+              controller: _description_controller,
+              onChanged: (value) {},
               decoration: InputDecoration(
                 labelText: 'Description',
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Description cannot be empty.';
+                }
+                return null;
+              },
             ),
             SizedBox(height: 16.0),
-            TextField(
-              onChanged: (value) {
-                // Handle labels
-              },
+            TextFormField(
+              onChanged: (value) {},
+              onSaved: (value) => _labels =
+                  value!.split(',').map((label) => label.trim()).toList(),
               decoration: InputDecoration(
                 labelText: 'Labels',
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Labels cannot be empty.';
+                }
+                return null;
+              },
             ),
             SizedBox(height: 16.0),
             Row(
@@ -144,13 +171,20 @@ class _DatasetUploadScreenState extends State<DatasetUploadScreen> {
             ),
             SizedBox(height: 16.0),
             RoundedButton(
-              text: "Submit",
-              size: size,
-              press: () {
-                // Handle the file upload with the additional information
-                // _selectedFilePath, _title, _description, _selectedDataType
-              },
-            ),
+                text: "Submit",
+                size: size,
+                press: () {
+                  if (_formKey.currentState!.validate()) {
+                    QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.success,
+                      text:
+                          'Thank you for your contribution! Your dataset is in review.',
+                    );
+                    // Handle the file upload with the additional information
+                    // _selectedFilePath, _title, _description, _selectedDataType
+                  }
+                }),
           ],
         ),
       ),
