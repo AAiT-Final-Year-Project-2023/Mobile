@@ -1,19 +1,28 @@
 import 'package:data_shelf/dataset/bloc/load_dataset/dataset_bloc.dart';
 import 'package:data_shelf/dataset/bloc/load_dataset/dataset_event.dart';
+import 'package:data_shelf/dataset/bloc/upvote_downvote/vote_bloc.dart';
+import 'package:data_shelf/dataset/bloc/upvote_downvote/vote_state.dart';
 import 'package:data_shelf/dataset/data_provider/dataset_data_provider.dart';
 import 'package:data_shelf/dataset/models/dataset_model.dart';
 import 'package:data_shelf/dataset/repository/dataset_repository.dart';
 import 'package:data_shelf/dataset/screens/dataset_details_screen.dart';
 import 'package:data_shelf/dataset/screens/dataset_upload_screen.dart';
+import 'package:data_shelf/home/bloc/user_info_bloc.dart';
+import 'package:data_shelf/home/bloc/user_info_state.dart';
+import 'package:data_shelf/home/repository/user_info_repository.dart';
 import 'package:data_shelf/utils/constants.dart';
 import 'package:data_shelf/contribution/screen/components/body.dart';
 import 'package:data_shelf/dataset/screens/components/page_title_text.dart';
+import 'package:data_shelf/utils/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../auth/screens/welcome/components/rounded_button.dart';
+import '../../../home/data_provider/user_info_data_provider.dart';
 import '../../bloc/load_dataset/dataset_state.dart';
+import '../../bloc/upvote_downvote/vote_event.dart';
 
 enum VoteStatus { none, upvoted, downvoted }
 
@@ -141,11 +150,17 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   final DatasetBloc datasetBloc = DatasetBloc(DatasetRepository(
       datasetDataProvider: DatasetDataProvider(httpClient: http.Client())));
+  FlutterSecureStorage storage = new FlutterSecureStorage();
+  String _currentUserId = '';
 
   @override
   void initState() {
     datasetBloc.add(LoadDatasetEvent());
     debugPrint("[UI] Dataset Loading");
+    storage.read(key: 'userId').then((value) => setState(() {
+          _currentUserId = value!;
+        }));
+    debugPrint(_currentUserId);
     super.initState();
   }
 
@@ -208,6 +223,199 @@ class _BodyState extends State<Body> {
         ),
       ),
     );
+  }
+
+  datasetListView2(Size s, List<DatasetModel> dataset) {
+    bool _is_upvoted = false;
+    bool is_downvoted = true;
+    return Expanded(
+        child: ListView.builder(
+            itemCount: dataset.length,
+            itemBuilder: (context, index) {
+              final item = dataset[index];
+              return Container(
+                padding: EdgeInsets.only(bottom: s.height * 0.025),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Colors.blueGrey, // Border color
+                      width: 1.0, // Border width
+                    ),
+                  ),
+                ),
+                child: ListTile(
+                  title: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DatasetDetailsScreen(
+                                dataset: item,
+                              ),
+                            ),
+                          );
+                        },
+                        child: SizedBox(
+                          width: s.width * 0.7,
+                          child: Text(
+                            item.title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: datasetTitle,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  subtitle: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(1),
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            decoration: BoxDecoration(
+                                // color: Colors.blue,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(color: primaryColor)),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.image,
+                                  size: 13,
+                                  color: primaryColor,
+                                ),
+                                Container(
+                                  margin: EdgeInsets.all(3),
+                                  child: Text(
+                                    item.datatype,
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Icon(
+                                Icons.filter_drama_outlined,
+                                size: 20,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                  '${double.parse((item.size / 1000000).toStringAsFixed(2))} MB'),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Text('${item.createdAt}'),
+                            Text('${item.user.username}'),
+                            Text('Jun 14')
+                          ]),
+                      SizedBox(height: s.height * 0.005),
+                      BlocProvider(
+                        create: (context) => VoteBloc(DatasetRepository(
+                            datasetDataProvider: DatasetDataProvider(
+                                httpClient: http.Client()))),
+                        child: Container(
+                          height: 35,
+                          decoration: BoxDecoration(
+                              // color: primaryColorLight, // Background color
+                              borderRadius: BorderRadius.circular(19),
+                              border:
+                                  Border.all(width: 1, color: primaryColor)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              BlocBuilder<VoteBloc, VoteState>(
+                                builder: (context, state) {
+                                  // final userLoaded = context
+                                  //     .read<UserInfoBloc>()
+                                  //     .state as UserInfoLoaded;
+                                  // if (item.upvotedBy
+                                  //     .contains(userLoaded.userModel.id)) {
+                                  //   print(userLoaded.userModel.id);
+                                  // }
+
+                                  // print(SecureStorage().getUserData())
+
+                                  if (state is VoteSuccessState) {
+                                    return IconButton(
+                                      icon: Icon(
+                                        Icons.arrow_drop_up_outlined,
+                                        color: state.hasVoted
+                                            ? primaryColor
+                                            : Colors.green,
+                                        size: 30,
+                                      ),
+                                      onPressed: () {
+                                        context
+                                            .read<VoteBloc>()
+                                            .add(UpvoteEvent(item.id));
+                                      },
+                                    );
+                                  }
+                                  return IconButton(
+                                    icon: Icon(
+                                      Icons.arrow_drop_up_outlined,
+                                      size: 30,
+                                    ),
+                                    onPressed: () {
+                                      context
+                                          .read<VoteBloc>()
+                                          .add(UpvoteEvent(item.id));
+                                    },
+                                  );
+                                },
+                              ),
+                              // SizedBox(width: s.width * 0.05),
+                              Text(
+                                ((item.upvotedBy).length -
+                                        (item.upvotedBy).length)
+                                    .toString(),
+                                style: TextStyle(fontSize: 13),
+                              ),
+                              // SizedBox(width: 8),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.arrow_drop_down_outlined,
+                                  size: 30,
+                                ),
+                                onPressed: () {
+                                  // TODO: Handle downvote button tap
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  trailing: Expanded(
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.download,
+                      ),
+                      onPressed: () {
+                        // TODO: Handle upvote
+                      },
+                    ),
+                  ),
+                ),
+              );
+            }));
   }
 
   Expanded datasetListView(Size s) {
@@ -314,168 +522,6 @@ class _BodyState extends State<Body> {
                             SizedBox(width: 8),
                             IconButton(
                               icon: Icon(Icons.arrow_downward),
-                              onPressed: () {
-                                // TODO: Handle downvote button tap
-                              },
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  trailing: Expanded(
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.download,
-                      ),
-                      onPressed: () {
-                        // TODO: Handle upvote
-                      },
-                    ),
-                  ),
-                ),
-              );
-            }));
-  }
-
-  Expanded datasetListView2(Size s, List<DatasetModel> dataset) {
-    return Expanded(
-        child: ListView.builder(
-            itemCount: dataset.length,
-            itemBuilder: (context, index) {
-              final item = dataset[index];
-              return Container(
-                padding: EdgeInsets.only(bottom: s.height * 0.025),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Colors.blueGrey, // Border color
-                      width: 1.0, // Border width
-                    ),
-                  ),
-                ),
-                child: ListTile(
-                  // leading: IconButton(
-                  //   icon: Icon(
-                  //     Icons.download,
-                  //   ),
-                  //   onPressed: () {
-                  //     // TODO: Handle upvote
-                  //   },
-                  // ),
-                  title: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DatasetDetailsScreen(
-                                dataset: item,
-                              ),
-                            ),
-                          );
-                        },
-                        child: SizedBox(
-                          width: s.width * 0.7,
-                          child: Text(
-                            item.title,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: datasetTitle,
-                          ),
-                        ),
-                      ),
-                      // Icon(Icons.download_sharp)
-                    ],
-                  ),
-                  subtitle: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(1),
-                            margin: EdgeInsets.symmetric(vertical: 10),
-                            decoration: BoxDecoration(
-                                // color: Colors.blue,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: primaryColor)),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.image,
-                                  size: 13,
-                                  color: primaryColor,
-                                ),
-                                Container(
-                                  margin: EdgeInsets.all(3),
-                                  child: Text(
-                                    item.datatype,
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(
-                                Icons.filter_drama_outlined,
-                                size: 20,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                  '${double.parse((item.size / 1000000).toStringAsFixed(2))} MB'),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Text('${item.createdAt}'),
-                            Text('${item.user.username}'),
-                            Text('Jun 14')
-                          ]),
-                      SizedBox(height: s.height * 0.005),
-                      Container(
-                        height: 35,
-                        decoration: BoxDecoration(
-                            // color: primaryColorLight, // Background color
-                            borderRadius: BorderRadius.circular(19),
-                            border: Border.all(width: 1, color: primaryColor)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                Icons.arrow_drop_up_outlined,
-                                size: 25,
-                              ),
-                              onPressed: () {
-                                // TODO: Handle upvote button tap
-                              },
-                            ),
-                            // SizedBox(width: s.width * 0.05),
-                            Text(
-                              ((item.upvotedBy).length -
-                                      (item.upvotedBy).length)
-                                  .toString(),
-                              style: TextStyle(fontSize: 13),
-                            ),
-                            // SizedBox(width: 8),
-                            IconButton(
-                              icon: Icon(
-                                Icons.arrow_drop_down_outlined,
-                                size: 25,
-                              ),
                               onPressed: () {
                                 // TODO: Handle downvote button tap
                               },

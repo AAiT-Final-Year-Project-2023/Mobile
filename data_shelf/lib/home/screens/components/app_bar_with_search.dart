@@ -1,4 +1,5 @@
 import 'package:data_shelf/notification/screens/notification_screen.dart';
+import 'package:data_shelf/user/screen/profile_screen.dart';
 import 'package:data_shelf/utils/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -81,7 +82,14 @@ class AppBarWithSearch extends StatelessWidget implements PreferredSizeWidget {
           color: primaryColor,
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfileScreen(),
+              ),
+            );
+          },
           icon: CircleAvatar(
             backgroundColor: primaryColor,
             child: Center(

@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:intl/intl.dart';
 
 import 'package:data_shelf/home/bloc/user_info_bloc.dart';
 import 'package:data_shelf/home/bloc/user_info_state.dart';
@@ -41,19 +42,19 @@ List<RecentActivity> recentActivities = [
 List<DatasetCustom> datasetsForDisplay = [
   DatasetCustom(
     iconData: Icons.audio_file,
-    title: 'Listen to music',
+    title: 'Amharic Childrens song',
     onUpvote: () {
       // Handle upvote action
     },
     onDownvote: () {},
-    date: "Dec, 2020",
+    date: "June, 2023",
     isDownvoted: false,
     isUpvoted: true,
     voteCount: 100,
   ),
   DatasetCustom(
     iconData: Icons.video_collection_rounded,
-    title: 'Book a flight',
+    title: 'Ethiopian christmas hockey(yegena-chewata)',
     onUpvote: () {
       // Handle upvote action
     },
@@ -65,7 +66,7 @@ List<DatasetCustom> datasetsForDisplay = [
   ),
   DatasetCustom(
     iconData: Icons.text_snippet_outlined,
-    title: 'Book a flight',
+    title: 'Text emotion recognition ',
     onUpvote: () {
       // Handle upvote action
     },
@@ -77,7 +78,7 @@ List<DatasetCustom> datasetsForDisplay = [
   ),
   DatasetCustom(
     iconData: Icons.image,
-    title: 'Take a photo',
+    title: 'Agricultural Crops ',
     onUpvote: () {
       // Handle upvote action
     },
@@ -91,43 +92,34 @@ List<DatasetCustom> datasetsForDisplay = [
 
 List<RequestListItem> requestItems = [
   RequestListItem(
-    text:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada aliquet odio ut malesuada. Aliquam sed gravida libero. Sed tempus velit nec est ultrices, ut tempor arcu convallis.',
+    text: 'Call for Abyssiniann wolf or Red fox species image',
     date: DateTime.now(),
     isNew: true,
-    number: 42,
+    number: 4,
   ),
   RequestListItem(
-    text: 'Short text',
+    text: 'Request for Ethiopian Agricultural Practices Data',
     date: DateTime.now(),
     isNew: false,
-    number: 99,
+    number: 9,
   ),
   RequestListItem(
-    text:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada aliquet odio ut malesuada. Aliquam sed gravida libero. Sed tempus velit nec est ultrices, ut tempor arcu convallis.',
+    text: 'Call for Ethiopian Traditional Music Recordings',
     date: DateTime.now(),
     isNew: true,
-    number: 42,
+    number: 2,
   ),
   RequestListItem(
-    text: 'Short text',
-    date: DateTime.now(),
-    isNew: false,
-    number: 99,
-  ),
-  RequestListItem(
-    text:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin malesuada aliquet odio ut malesuada. Aliquam sed gravida libero. Sed tempus velit nec est ultrices, ut tempor arcu convallis.',
+    text: 'Request for Ethiopian Sign Language Videos',
     date: DateTime.now(),
     isNew: true,
-    number: 42,
+    number: 0,
   ),
   RequestListItem(
-    text: 'Short text',
+    text: 'Call for Ethiopian Oral History Accounts',
     date: DateTime.now(),
     isNew: false,
-    number: 99,
+    number: 3,
   ),
   // Add more items here
 ];
@@ -342,7 +334,7 @@ class _BodyState extends State<Body> {
 
             return ListTile(
                 title: Text(shortenedText),
-                subtitle: Text(item.date.toString()),
+                subtitle: Text(DateFormat('MMMM, d').format(item.date)),
                 trailing: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [

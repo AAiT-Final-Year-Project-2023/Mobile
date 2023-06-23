@@ -58,11 +58,17 @@ class DatasetDataProvider {
     throw ('Failed to get available datasets');
   }
 
-  Future<void> uploadFile(File file, String title, String description,
+  Future<void> uploadFile(String filePath, String title, String description,
       List<String> labels, String dataType) async {
-    var token_on_storage = await secureStorage.readSecureData("token");
+    var getuserData = await secureStorage.getUserData();
+    String token = getuserData['token']!;
+    print(token);
     Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: 'Bearer $token_on_storage',
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+      'Content-Type': 'multipart/form-data',
+      'Accept': '*/*',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Connection': 'keep-alive'
     };
     var request = http.MultipartRequest(
         'POST',
@@ -72,19 +78,55 @@ class DatasetDataProvider {
     request.headers.addAll(headers);
 
     // Set the file field
-    request.files.add(await http.MultipartFile.fromPath('file', file.path));
-
+    // request.files.add(await http.MultipartFile.fromPath('file', filePath));
+    final fileBytes = await File(filePath).readAsBytes();
+    request.files.add(http.MultipartFile.fromBytes(
+      'file',
+      fileBytes,
+      filename: 'file.zip',
+    ));
     // Set other form fields
     request.fields['title'] = title;
     request.fields['description'] = description;
     request.fields['labels'] = labels.join(',');
     request.fields['dataType'] = dataType;
+
     var response = await request.send();
+    final responseString = await response.stream.bytesToString();
+    print(responseString);
 
     if (response.statusCode == 200) {
       print('File uploaded successfully!');
     } else {
       print('Error uploading file: ${response.reasonPhrase}');
+      throw Exception();
     }
+  }
+
+  Future<DatasetModel> upvoteDataset(String id) async {
+    var token_on_storage = await secureStorage.readSecureData("token");
+    var t =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkJvbm5pZWYiLCJzdWIiOiJiZjViZDVlNi0xYmU0LTQyNzItYTBmMy0wNWE1YzgxMjU0ZGQiLCJyb2xlcyI6WyJ1c2VyIl0sImlhdCI6MTY4NjQ3NjA0NiwiZXhwIjoxNjg2OTA4MDQ2fQ.eNKDrEbBPqU0py4i5ALlW4a1k5XW47vSuaQ7-w6VH7E";
+    print(id);
+    print("dataset ID");
+    final response = await httpClient.get(
+      Uri.parse(
+        '$_baseURL/dataset/$id/upvote',
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $t',
+      },
+    );
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200) {
+      final body = jsonDecode(response.body);
+
+      var dataset = DatasetModel.fromJson(body);
+
+      return dataset;
+    }
+    throw ('Failed to get available datasets');
   }
 }

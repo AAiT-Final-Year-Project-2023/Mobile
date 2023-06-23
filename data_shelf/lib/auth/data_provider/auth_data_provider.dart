@@ -21,6 +21,11 @@ class AuthDataProvider {
 
   AuthDataProvider({required this.httpClient});
 
+  Future<String?> getUserId() async {
+    var finalUser = await secureStorage.getUserData();
+    return finalUser["userId"];
+  }
+
   Future<bool> signUp(
       {required String username,
       required String email,

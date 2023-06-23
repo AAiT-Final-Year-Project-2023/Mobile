@@ -1,14 +1,21 @@
 import 'package:data_shelf/auth/screens/welcome/components/rounded_button.dart';
+import 'package:data_shelf/dataset/bloc/upload_dataset/upload_dataset_event.dart';
+import 'package:data_shelf/dataset/data_provider/dataset_data_provider.dart';
+import 'package:data_shelf/dataset/repository/dataset_repository.dart';
 import 'package:data_shelf/utils/constants.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:http/http.dart' as http;
 
 import '../../home/screens/components/container_with_border.dart';
+import '../bloc/upload_dataset/upload_dataset_bloc.dart';
+import '../bloc/upload_dataset/upload_dataset_state.dart';
 
 class DatasetUploadScreen extends StatefulWidget {
   const DatasetUploadScreen({super.key});
@@ -22,7 +29,7 @@ class _DatasetUploadScreenState extends State<DatasetUploadScreen> {
   String _selectedFilePath = '';
   var _title_controller = TextEditingController();
   var _description_controller = TextEditingController();
-  var _labels = [];
+  List<String> _labels = [];
   String _selectedDataType = 'Image';
   List<String> _dataTypes = ['Image', 'Audio', 'Video', 'Text'];
 
@@ -170,21 +177,40 @@ class _DatasetUploadScreenState extends State<DatasetUploadScreen> {
               ],
             ),
             SizedBox(height: 16.0),
-            RoundedButton(
-                text: "Submit",
-                size: size,
-                press: () {
-                  if (_formKey.currentState!.validate()) {
-                    QuickAlert.show(
-                      context: context,
-                      type: QuickAlertType.success,
-                      text:
-                          'Thank you for your contribution! Your dataset is in review.',
-                    );
-                    // Handle the file upload with the additional information
-                    // _selectedFilePath, _title, _description, _selectedDataType
-                  }
-                }),
+            BlocListener<UploadDatasetBloc, UploadDatasetState>(
+              listener: (context, state) {
+                if (state is UploadDatasetSuccess)
+                  QuickAlert.show(
+                    context: context,
+                    type: QuickAlertType.success,
+                    text:
+                        'Thank you for your contribution! Your dataset is in review.',
+                  );
+              },
+              child: RoundedButton(
+                  text: "Submit",
+                  size: size,
+                  press: () {
+                    if (_formKey.currentState!.validate() &&
+                        _selectedFilePath != '') {
+                      // context
+                      //     .read<UploadDatasetBloc>()
+                      //     .add(UploadDatasetClickedEvent(
+                      //       dataType: _selectedDataType,
+                      //       description: _description_controller.text,
+                      //       filePath: _selectedFilePath,
+                      //       title: _title_controller.text,
+                      //       labels: _labels,
+                      //     ));
+                      QuickAlert.show(
+                        context: context,
+                        type: QuickAlertType.success,
+                        text:
+                            'Thank you for your contribution! Your dataset is in review.',
+                      );
+                    }
+                  }),
+            ),
           ],
         ),
       ),

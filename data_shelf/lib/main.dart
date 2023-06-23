@@ -5,7 +5,9 @@ import 'package:data_shelf/auth/screens/login/forgot_password_screen.dart';
 import 'package:data_shelf/auth/screens/login/login_screen.dart';
 import 'package:data_shelf/auth/screens/login/password_reset_screen.dart';
 import 'package:data_shelf/auth/screens/signup/confirm_email_screen.dart';
+import 'package:data_shelf/dataset/data_provider/dataset_data_provider.dart';
 import 'package:data_shelf/dataset/screens/dataset_screen.dart';
+import 'package:data_shelf/home/repository/user_info_repository.dart';
 import 'package:data_shelf/routes.dart';
 import 'package:data_shelf/utils/constants.dart';
 import 'package:data_shelf/home/screens/home_screen.dart';
@@ -19,36 +21,59 @@ import 'auth/data_provider/auth_data_provider.dart';
 
 import 'package:http/http.dart' as http;
 
+import 'dataset/bloc/upload_dataset/upload_dataset_bloc.dart';
+import 'dataset/repository/dataset_repository.dart';
+import 'home/bloc/user_info_bloc.dart';
+import 'home/data_provider/user_info_data_provider.dart';
+
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
+  final UserInfoBloc uib = UserInfoBloc(UserInfoRepository(
+      userInfoDataProvider: UserInfoDataProvider(httpClient: http.Client())));
+
   final AuthRepository authRepo = new AuthRepository(
       authDataProvider: AuthDataProvider(httpClient: http.Client()));
+
+  var datasetRepo = DatasetRepository(
+      datasetDataProvider: DatasetDataProvider(httpClient: http.Client()));
   final secureStorage = SecureStorage();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider.value(
         value: authRepo,
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'DataShelf',
-          theme: ThemeData(
-            primaryColor: primaryColor,
-            scaffoldBackgroundColor: Colors.white,
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => uib,
+            ),
+            BlocProvider(
+              create: (context) =>
+                  UploadDatasetBloc(datasetRepository: datasetRepo),
+            )
+          ],
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'DataShelf',
+            theme: ThemeData(
+              primaryColor: primaryColor,
+              scaffoldBackgroundColor: Colors.white,
+            ),
+
+            // home: RouteGenerator.welcomePage,
+            onGenerateRoute: RouteGenerator.generateRoute,
+            // home: WelcomeScreen(),
+            home: const HomeScreen(),
+            // home: RequestPage(),
+            // home: LoginScreen(),
+            // home: ConfirmEmailScreen(),
+            // home: ForgotPasswordScreen(),
+            // home: PasswordResetScreen(),
           ),
-          // home: RouteGenerator.welcomePage,
-          onGenerateRoute: RouteGenerator.generateRoute,
-          // home: WelcomeScreen(),
-          home: const HomeScreen(),
-          // home: RequestPage(),
-          // home: LoginScreen(),
-          // home: ConfirmEmailScreen(),
-          // home: ForgotPasswordScreen(),
-          // home: PasswordResetScreen(),
         ));
   }
 }

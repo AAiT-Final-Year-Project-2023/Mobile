@@ -70,20 +70,22 @@ class DatasetCustomCard extends StatelessWidget {
               color: Colors.blue,
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                title,
-                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                date,
-                style: TextStyle(color: Colors.grey),
-              ),
-            ],
+          Flexible(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  date,
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ],
+            ),
           ),
           Column(
             children: [

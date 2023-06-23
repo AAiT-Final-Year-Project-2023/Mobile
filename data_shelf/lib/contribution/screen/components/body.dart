@@ -21,32 +21,31 @@ class Body extends StatelessWidget {
         FilterBar(),
         Expanded(
           child: ListView.builder(
-            itemCount: 10, // Replace with the actual number of contributions
+            itemCount: 1, // Replace with the actual number of contributions
             itemBuilder: (context, index) {
               return ContributionCard(
                 contribution: Contribution(
-                  requestTitle: 'Alfalfa root crowns',
-                  contributionDate:
-                      'May 15, 2023', // Replace with actual contribution date
-                  numberOfContributions:
-                      5, // Replace with actual number of contributions
-                  amountEarned: '\$50.00', // Replace with actual amount earned
-                  contributionType: 'Image',
-                  detail:
-                      "We are seeking high-quality images of Alfalfa root crowns for our dataset. The pictures should be clear, well-detailed, and captured in high resolution, allowing for close examination of the root crowns. Please ensure consistent lighting conditions throughout the images to maintain uniformity in the dataset. In terms of types, we require a diverse collection that represents different qualities and stages of growth. Capture images of healthy root crowns displaying signs of vitality and robustness. Include a variety of growth stages, ranging from young and tender root crowns to mature and well-established ones. It is crucial to showcase Alfalfa root crowns from various soil conditions, such as sandy, loamy, and clayey soils. This will account for the variations in growth patterns that occur due to different soil types. By following these guidelines, we aim to create a comprehensive dataset that encompasses the range of qualities and types of Alfalfa root crowns, enabling further research and analysis in the field.",
-                ),
+                    requestTitle: 'Amharic handwritten characters',
+                    contributionDate:
+                        'June 15, 2023', // Replace with actual contribution date
+                    numberOfContributions:
+                        5, // Replace with actual number of contributions
+                    amountEarned: '00.00', // Replace with actual amount earned
+                    contributionType: 'Image',
+                    detail:
+                        "We are seeking high-quality images of Amharic handwritten characters for our dataset. The images should clearly capture the intricate details of the characters and be of high resolution, allowing for accurate analysis and recognition. It is essential that the handwriting is legible and well-formed to ensure the reliability of the dataset. Please ensure that the images are well-lit and free from shadows or blurriness, as these factors can affect the quality and usability of the dataset."),
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => ContributionDetailsScreen(
-                        contributionDate: 'May 15, 2023',
+                        contributionDate: 'June 15, 2023',
                         numberOfContributions: 5,
-                        amountEarned: '\$50.00',
+                        amountEarned: '00.00',
                         contributionType: 'Image',
                         detail:
                             "We are seeking high-quality images of Alfalfa root crowns for our dataset. The pictures should be clear, well-detailed, and captured in high resolution, allowing for close examination of the root crowns. Please ensure consistent lighting conditions throughout the images to maintain uniformity in the dataset. In terms of types, we require a diverse collection that represents different qualities and stages of growth. Capture images of healthy root crowns displaying signs of vitality and robustness. Include a variety of growth stages, ranging from young and tender root crowns to mature and well-established ones. It is crucial to showcase Alfalfa root crowns from various soil conditions, such as sandy, loamy, and clayey soils. This will account for the variations in growth patterns that occur due to different soil types. By following these guidelines, we aim to create a comprehensive dataset that encompasses the range of qualities and types of Alfalfa root crowns, enabling further research and analysis in the field.",
-                        requestTitle: 'Alfalfa root crowns',
+                        requestTitle: 'Amharic handwritten characters',
                         requestBy: 'Adam Hassen',
 
                         // Pass additional details if needed

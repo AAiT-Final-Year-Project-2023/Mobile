@@ -113,12 +113,12 @@ class DatasetDetailsScreen extends StatelessWidget {
             SizedBox(
               height: size.height * 0.05,
             ),
-            RoundedButton(
-              text: 'Download',
-              press: () {},
-              size: size,
-              widthRatio: 0.9,
-            )
+            // RoundedButton(
+            //   text: 'Download',
+            //   press: () {},
+            //   size: size,
+            //   widthRatio: 0.9,
+            // )
             // GestureDetector(
             //   onTap: () {},
             //   child: containerWithBorder(
